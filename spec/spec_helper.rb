@@ -2,17 +2,12 @@ require 'rspec'
 require 'simplecov'
 require 'simplecov-json'
 require 'codeclimate-test-reporter'
-require 'codacy-coverage'
 
-Codacy::Reporter.start
-
-SimpleCov.configure do
+SimpleCov.start do
   root File.join(File.dirname(__FILE__), '..')
   project_name 'Ruby JWT - Ruby JSON Web Token implementation'
   add_filter 'spec'
 end
-
-SimpleCov.start if ENV['COVERAGE']
 
 CERT_PATH = File.join(File.dirname(__FILE__), 'fixtures', 'certs')
 
