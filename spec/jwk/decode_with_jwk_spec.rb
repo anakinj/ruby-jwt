@@ -29,6 +29,21 @@ describe JWT do
         end
       end
 
+      context 'and algorithms is not specified' do
+        it 'resolves algorithm from JWK' do
+          payload, _header = described_class.decode(signed_token, nil, true, { jwks: public_jwks})
+          expect(payload).to eq(token_payload)
+        end
+      end
+
+      context 'and algorithms is different from the JWKs' do
+        it 'uses the given algorithms and fails' do
+          expect { described_class.decode(signed_token, nil, true, { algorithms: ['RS256'], jwks: public_jwks}) }.to raise_error(
+            JWT::DecodeError, 'Expected a different algorithm'
+          )
+        end
+      end
+
       context 'and kid is not in the set' do
         before do
           public_jwks[:keys].first[:kid] = 'NOT_A_MATCH'
