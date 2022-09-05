@@ -3,11 +3,6 @@
 require 'jwt/security_utils'
 require 'openssl'
 require 'jwt/algos'
-begin
-  require 'rbnacl'
-rescue LoadError
-  raise if defined?(RbNaCl)
-end
 
 # JWT::Signature module
 module JWT
