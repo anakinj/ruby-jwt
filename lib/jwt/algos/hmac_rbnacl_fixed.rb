@@ -2,7 +2,7 @@
 
 module JWT
   module Algos
-    module HmacRbNaCl
+    module HmacRbNaClFixed
       module_function
 
       MAPPING = {
@@ -16,9 +16,9 @@ module JWT
 
       def sign(to_sign)
         algorithm, msg, key = to_sign.values
-        if (hmac = resolve_algorithm(algorithm))
-          key ||= ''
-          hmac.auth(key.encode('binary'), msg.encode('binary'))
+        key ||= ''
+        if (hmac = resolve_algorithm(algorithm)) && key.bytesize <= hmac.key_bytes
+          hmac.auth(padded_key_bytes(key, hmac.key_bytes), msg.encode('binary'))
         else
           Hmac.sign(to_sign)
         end
@@ -27,8 +27,8 @@ module JWT
       def verify(to_verify)
         algorithm, key, signing_input, signature = to_verify.values
 
-        if (hmac = resolve_algorithm(algorithm))
-          hmac.verify(key.encode('binary'), signature.encode('binary'), signing_input.encode('binary'))
+        if (hmac = resolve_algorithm(algorithm)) && key.bytesize <= hmac.key_bytes
+          hmac.verify(padded_key_bytes(key, hmac.key_bytes), signature.encode('binary'), signing_input.encode('binary'))
         else
           Hmac.verify(to_verify)
         end
@@ -38,6 +38,10 @@ module JWT
 
       def resolve_algorithm(algorithm)
         MAPPING.fetch(algorithm)
+      end
+
+      def padded_key_bytes(key, bytesize)
+        key.bytes.fill(0, key.bytesize...bytesize).pack('C*')
       end
     end
   end

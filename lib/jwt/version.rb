@@ -25,4 +25,12 @@ module JWT
     return false if OpenSSL::OPENSSL_VERSION.include?('LibreSSL')
     return true if OpenSSL::OPENSSL_VERSION_NUMBER >= 3 * 0x10000000
   end
+
+  def self.rbnacl?
+    defined?(::RbNaCl)
+  end
+
+  def self.rbnacl_6_or_greater?
+    rbnacl? && ::Gem::Version.new(::RbNaCl::VERSION) >= ::Gem::Version.new('6.0.0')
+  end
 end

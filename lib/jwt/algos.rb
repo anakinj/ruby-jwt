@@ -30,11 +30,14 @@ module JWT
         Algos::Unsupported
       ]
 
-      if defined?(RbNaCl)
+      list << if ::JWT.rbnacl_6_or_greater?
         require_relative 'algos/hmac_rbnacl'
-        list << Algos::HmacRbNaCl
+        Algos::HmacRbNaCl
+      elsif ::JWT.rbnacl?
+        require_relative 'algos/hmac_rbnacl_fixed'
+        Algos::HmacRbNaClFixed
       else
-        list << Algos::Hmac
+        Algos::Hmac
       end
     end.freeze
 

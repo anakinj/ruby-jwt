@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-if defined?(RbNaCl)
+if ::JWT.rbnacl_6_or_greater?
   RSpec.describe ::JWT::Algos::HmacRbNaCl do
     let(:data) { 'this_is_the_string_to_be_signed' }
     let(:key) { 'the secret key' }
