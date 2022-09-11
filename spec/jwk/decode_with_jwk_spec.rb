@@ -94,7 +94,7 @@ RSpec.describe JWT do
             raise_error do |e|
               if defined?(RbNaCl)
                 expect(e).to be_a(NoMethodError)
-                expect(e.message).to match(/undefined method `(encode|bytesize)'/)
+                expect(e.message).to match(/undefined method `(encode|bytesize|size)'/)
               else
                 expect(e).to be_a(TypeError)
                 expect(e.message).to eq('no implicit conversion of OpenSSL::PKey::RSA into String')
@@ -112,7 +112,7 @@ RSpec.describe JWT do
             raise_error do |e|
               if defined?(RbNaCl)
                 expect(e).to be_a(NoMethodError)
-                expect(e.message).to match(/undefined method `(encode|bytesize)'/)
+                expect(e.message).to match(/undefined method `(encode|bytesize|size)'/)
               else
                 expect(e).to be_a(TypeError)
                 expect(e.message).to eq('no implicit conversion of OpenSSL::PKey::EC into String')

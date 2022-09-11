@@ -2,7 +2,6 @@
 
 RSpec.describe JWT do
   let(:payload) { { 'user_id' => 'some@user.tld' } }
-
   let :data do
     data = {
       :empty_token => 'e30K.e30K.e30K',
@@ -630,7 +629,6 @@ RSpec.describe JWT do
   context 'when hmac algorithm is used without secret key' do
     it 'encodes payload' do
       pending 'Different behaviour on OpenSSL 3.0 (https://github.com/openssl/openssl/issues/13089)' if ::JWT.openssl_3?
-      pending 'RbNaCl does not support empty keys' if ::JWT.rbnacl_6_or_greater?
 
       payload = { a: 1, b: 'b' }
 
@@ -763,7 +761,6 @@ RSpec.describe JWT do
     let(:no_key_token) { ::JWT.encode(payload, nil, 'HS512') }
     it 'raises JWT::DecodeError' do
       pending 'Different behaviour on OpenSSL 3.0 (https://github.com/openssl/openssl/issues/13089)' if ::JWT.openssl_3?
-      pending 'RbNaCl does not support empty keys' if ::JWT.rbnacl_6_or_greater?
 
       expect { ::JWT.decode(no_key_token, nil, true, algorithms: 'HS512') }.to raise_error(JWT::DecodeError, 'No verification key available')
     end

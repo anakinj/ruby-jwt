@@ -17,7 +17,7 @@ module JWT
       def sign(to_sign)
         algorithm, msg, key = to_sign.values
         if (hmac = resolve_algorithm(algorithm))
-          key ||= ''
+          key = padded_empty_key(hmac.key_bytes) if key.nil? || key.size.zero?
           hmac.auth(key.encode('binary'), msg.encode('binary'))
         else
           Hmac.sign(to_sign)
@@ -28,6 +28,7 @@ module JWT
         algorithm, key, signing_input, signature = to_verify.values
 
         if (hmac = resolve_algorithm(algorithm))
+          key = padded_empty_key(hmac.key_bytes) if key.size.zero?
           hmac.verify(key.encode('binary'), signature.encode('binary'), signing_input.encode('binary'))
         else
           Hmac.verify(to_verify)
@@ -38,6 +39,10 @@ module JWT
 
       def resolve_algorithm(algorithm)
         MAPPING.fetch(algorithm)
+      end
+
+      def padded_empty_key(length)
+        Array.new(length, 0x0).pack('C*').encode('binary')
       end
     end
   end

@@ -30,7 +30,6 @@ RSpec.describe 'README.md code test' do
 
     it 'decodes with HMAC algorithm without secret key' do
       pending 'Different behaviour on OpenSSL 3.0 (https://github.com/openssl/openssl/issues/13089)' if ::JWT.openssl_3?
-      pending 'RbNaCl does not support empty keys' if ::JWT.rbnacl_6_or_greater?
       token = JWT.encode payload, nil, 'HS256'
       decoded_token = JWT.decode token, nil, false
 
