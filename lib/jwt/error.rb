@@ -17,6 +17,7 @@ module JWT
   class InvalidJtiError < DecodeError; end
   class InvalidPayload < DecodeError; end
   class MissingRequiredClaim < DecodeError; end
+  class InvalidHeaderError < DecodeError; end
 
   class JWKError < DecodeError; end
 end

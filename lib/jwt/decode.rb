@@ -25,6 +25,7 @@ module JWT
       validate_segment_count!
       if @verify
         decode_signature
+        verify_header
         verify_algo
         set_key
         verify_signature
@@ -47,6 +48,10 @@ module JWT
       return if Array(@key).any? { |key| verify_signature_for?(key) }
 
       raise(JWT::VerificationError, 'Signature verification failed')
+    end
+
+    def verify_header
+      raise(JWT::InvalidHeaderError, 'Token header is not a JSON object') unless header.is_a?(Hash)
     end
 
     def verify_algo

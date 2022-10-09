@@ -8,7 +8,7 @@
 
 **Fixes and enhancements:**
 
-- Your contribution here
+- Raise error if header is not a JSON object [#481](https://github.com/jwt/ruby-jwt/pull/12345688) ([@anakinj](https://github.com/anakinj)).
 
 ## [v2.5.0](https://github.com/jwt/ruby-jwt/tree/v2.5.0) (2022-08-25)
 

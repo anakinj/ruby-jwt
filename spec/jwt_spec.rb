@@ -868,4 +868,16 @@ RSpec.describe JWT do
       end
     end
   end
+
+  context 'when header in token is not an object and verification enabled' do
+    it 'raises an error' do
+      expect { ::JWT.decode('Mw.payload.signature', nil, true, algorithms: 'HS512') }.to raise_error(JWT::InvalidHeaderError, 'Token header is not a JSON object')
+    end
+  end
+
+  context 'when header in token is not an object and verification disabled' do
+    it 'raises an error' do
+      expect(::JWT.decode('Mw.Mw.Mw', nil, false, algorithms: 'HS512')).to eq([3, 3])
+    end
+  end
 end
