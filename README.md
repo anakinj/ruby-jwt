@@ -72,7 +72,7 @@ puts decoded_token
 ### **HMAC**
 
 * HS256 - HMAC using SHA-256 hash algorithm
-* HS512256 - HMAC using SHA-512-256 hash algorithm (only available with RbNaCl; see note below)
+* HS512256 - HMAC using SHA-512-256 hash algorithm
 * HS384 - HMAC using SHA-384 hash algorithm
 * HS512 - HMAC using SHA-512 hash algorithm
 

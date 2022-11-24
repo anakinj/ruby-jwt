@@ -6,9 +6,10 @@ module JWT
       module_function
 
       MAPPING = {
-        'HS256' => OpenSSL::Digest::SHA256,
-        'HS384' => OpenSSL::Digest::SHA384,
-        'HS512' => OpenSSL::Digest::SHA512
+        'HS256' => 'SHA256',
+        'HS384' => 'SHA384',
+        'HS512' => 'SHA512',
+        'HS512256' => 'SHA512-256'
       }.freeze
 
       SUPPORTED = MAPPING.keys
@@ -18,7 +19,7 @@ module JWT
 
         raise JWT::DecodeError, 'HMAC key expected to be a String' unless key.is_a?(String)
 
-        OpenSSL::HMAC.digest(MAPPING[algorithm].new, key, msg)
+        OpenSSL::HMAC.digest(OpenSSL::Digest.new(MAPPING[algorithm]), key, msg)
       rescue OpenSSL::HMACError => e
         if key == '' && e.message == 'EVP_PKEY_new_mac_key: malloc failure'
           raise JWT::DecodeError, 'OpenSSL 3.0 does not support nil or empty hmac_secret'
