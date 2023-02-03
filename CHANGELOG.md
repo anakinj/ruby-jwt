@@ -14,6 +14,7 @@
 
 **Fixes and enhancements:**
 
+- Algorithms moved under the `::JWT::JWA` module ([@anakinj](https://github.com/anakinj))
 - Your contribution here
 
 ## [v2.8.0](https://github.com/jwt/ruby-jwt/tree/v2.8.0) (NEXT)
