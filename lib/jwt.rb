@@ -1,5 +1,11 @@
 # frozen_string_literal: true
 
+begin
+  require 'rbnacl'
+rescue LoadError
+  raise if defined?(RbNaCl)
+end
+
 require 'jwt/version'
 require 'jwt/base64'
 require 'jwt/json'

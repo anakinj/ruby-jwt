@@ -2,6 +2,20 @@
 
 # Changelog
 
+## [v3.0.0](https://github.com/jwt/ruby-jwt/tree/v3.0.0) (FUTURE)
+
+[Full Changelog](https://github.com/jwt/ruby-jwt/compare/v2.7.0...v3.0.0)
+
+**Features:**
+
+- [**Breaking change**] Removed support for the HMAC algorithm HS512256 (HMAC-SHA-512 truncated to 256-bits) [#549](https://github.com/jwt/ruby-jwt/issues/549) ([@anakinj](https://github.com/anakinj))
+- Only use openssl for HMAC algorithms [#550](https://github.com/jwt/ruby-jwt/issues/550) ([@anakinj](https://github.com/anakinj))
+- Your contribution here
+
+**Fixes and enhancements:**
+
+- Your contribution here
+
 ## [v2.8.0](https://github.com/jwt/ruby-jwt/tree/v2.8.0) (NEXT)
 
 [Full Changelog](https://github.com/jwt/ruby-jwt/compare/v2.7.0...v2.8.0)

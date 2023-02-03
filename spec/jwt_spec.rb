@@ -124,10 +124,7 @@ RSpec.describe JWT do
     end
   end
 
-  algorithms = %w[HS256 HS384 HS512]
-  algorithms << 'HS512256' if ::JWT.rbnacl?
-
-  algorithms.each do |alg|
+  %w[HS256 HS384 HS512].each do |alg|
     context "alg: #{alg}" do
       it 'should generate a valid token' do
         token = JWT.encode payload, data[:secret], alg
