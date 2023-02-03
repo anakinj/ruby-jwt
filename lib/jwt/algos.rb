@@ -1,12 +1,6 @@
 # frozen_string_literal: true
 
-begin
-  require 'rbnacl'
-rescue LoadError
-  raise if defined?(RbNaCl)
-end
 require 'openssl'
-
 require 'jwt/algos/hmac'
 require 'jwt/algos/eddsa'
 require 'jwt/algos/ecdsa'
@@ -20,22 +14,13 @@ module JWT
   module Algos
     extend self
 
-    ALGOS = [Algos::Ecdsa,
+    ALGOS = [Algos::Hmac,
+             Algos::Ecdsa,
              Algos::Rsa,
              Algos::Eddsa,
              Algos::Ps,
              Algos::None,
-             Algos::Unsupported].tap do |l|
-      if ::JWT.rbnacl_6_or_greater?
-        require_relative 'algos/hmac_rbnacl'
-        l.unshift(Algos::HmacRbNaCl)
-      elsif ::JWT.rbnacl?
-        require_relative 'algos/hmac_rbnacl_fixed'
-        l.unshift(Algos::HmacRbNaClFixed)
-      else
-        l.unshift(Algos::Hmac)
-      end
-    end.freeze
+             Algos::Unsupported].freeze
 
     def find(algorithm)
       indexed[algorithm && algorithm.downcase]
