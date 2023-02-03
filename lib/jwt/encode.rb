@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative 'algos'
+require_relative 'jwa'
 require_relative 'claims_validator'
 
 # JWT::Encode module
@@ -25,9 +25,9 @@ module JWT
     private
 
     def resolve_algorithm(algorithm)
-      return algorithm if Algos.implementation?(algorithm)
+      return algorithm if JWA.implementation?(algorithm)
 
-      Algos.create(algorithm)
+      JWA.create(algorithm)
     end
 
     def encoded_header
