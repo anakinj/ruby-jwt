@@ -3,30 +3,39 @@
 module JWT
   module JWA
     module Eddsa
-      module_function
-
       SUPPORTED = %w[ED25519 EdDSA].freeze
+      SUPPORTED_DOWNCASED = SUPPORTED.map(&:downcase).freeze
 
-      def sign(algorithm, msg, key)
-        if key.class != RbNaCl::Signatures::Ed25519::SigningKey
-          raise EncodeError, "Key given is a #{key.class} but has to be an RbNaCl::Signatures::Ed25519::SigningKey"
+      class << self
+        def sign(algorithm, msg, key)
+          unless key.is_a?(RbNaCl::Signatures::Ed25519::SigningKey)
+            raise EncodeError, "Key given is a #{key.class} but has to be an RbNaCl::Signatures::Ed25519::SigningKey"
+          end
+
+          validate_algorithm!(algorithm)
+
+          key.sign(msg)
         end
-        unless SUPPORTED.map(&:downcase).map(&:to_sym).include?(algorithm.downcase.to_sym)
-          raise IncorrectAlgorithm, "payload algorithm is #{algorithm} but #{key.primitive} signing key was provided"
+
+        def verify(algorithm, public_key, signing_input, signature)
+          unless public_key.is_a?(RbNaCl::Signatures::Ed25519::VerifyKey)
+            raise DecodeError, "key given is a #{public_key.class} but has to be a RbNaCl::Signatures::Ed25519::VerifyKey"
+          end
+
+          validate_algorithm!(algorithm)
+
+          public_key.verify(signature, signing_input)
+        rescue RbNaCl::CryptoError
+          false
         end
 
-        key.sign(msg)
-      end
+        private
 
-      def verify(algorithm, public_key, signing_input, signature)
-        unless SUPPORTED.map(&:downcase).map(&:to_sym).include?(algorithm.downcase.to_sym)
-          raise IncorrectAlgorithm, "payload algorithm is #{algorithm} but #{key.primitive} signing key was provided"
+        def validate_algorithm!(algorithm)
+          return if SUPPORTED_DOWNCASED.include?(algorithm.downcase)
+
+          raise IncorrectAlgorithm, "Algorithm #{algorithm} not supported. Supported algoritms are #{SUPPORTED.join(', ')}"
         end
-        raise DecodeError, "key given is a #{public_key.class} but has to be a RbNaCl::Signatures::Ed25519::VerifyKey" if public_key.class != RbNaCl::Signatures::Ed25519::VerifyKey
-
-        public_key.verify(signature, signing_input)
-      rescue RbNaCl::CryptoError
-        false
       end
     end
   end
