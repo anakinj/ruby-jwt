@@ -11,7 +11,3 @@ end
 appraise 'rbnacl' do
   gem 'rbnacl', '>= 6'
 end
-
-appraise 'rbnacl-pre-6' do
-  gem 'rbnacl', '< 6'
-end

@@ -40,7 +40,6 @@ jobs:
           - gemfiles/standalone.gemfile
           - gemfiles/openssl.gemfile
           - gemfiles/rbnacl.gemfile
-          - gemfiles/rbnacl-pre-6.gemfile
         experimental: [false]
         include:
           - os: ubuntu-22.04
