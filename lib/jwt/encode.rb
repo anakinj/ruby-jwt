@@ -69,7 +69,7 @@ module JWT
     end
 
     def encode_data(data)
-      Base64.urlsafe_encode64(JWT::JSON.generate(data), padding: false)
+      Base64.urlsafe_encode64(::JSON.generate(data), padding: false)
     end
 
     def combine(*parts)
