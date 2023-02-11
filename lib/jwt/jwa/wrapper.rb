@@ -2,7 +2,7 @@
 
 module JWT
   module JWA
-    class AlgoWrapper
+    class Wrapper
       attr_reader :alg, :cls
 
       def initialize(alg, cls)
