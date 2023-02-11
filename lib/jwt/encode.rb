@@ -3,9 +3,7 @@
 require_relative 'jwa'
 require_relative 'claims_validator'
 
-# JWT::Encode module
 module JWT
-  # Encoding logic for JWT
   class Encode
     ALG_KEY = 'alg'
 

@@ -8,4 +8,4 @@ This document describes breaking changes in behavior and api for major version o
 
 As of 3.0.0 the gem is using the Ruby stdlib base64 decoding that conforms to RFC 4648.This means for example that tokens passed to decoding cannot contain trailing spaces and newlines.
 
-Also the module `::JWT::Base64` has been removed.
+By moving to built-in functionality th the module `::JWT::Base64` has been removed as obsolete.

@@ -5,9 +5,7 @@ require 'json'
 require 'jwt/verify'
 require 'jwt/x5c_key_finder'
 
-# JWT::Decode module
 module JWT
-  # Decoding logic for JWT
   class Decode
     def initialize(jwt, key, verify, options, &keyfinder)
       raise(JWT::DecodeError, 'Nil JSON web token') unless jwt

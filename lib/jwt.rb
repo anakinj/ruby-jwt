@@ -13,10 +13,6 @@ require 'jwt/encode'
 require 'jwt/error'
 require 'jwt/jwk'
 
-# JSON Web Token implementation
-#
-# Should be up to date with the latest spec:
-# https://tools.ietf.org/html/rfc7519
 module JWT
   extend ::JWT::Configuration
 
