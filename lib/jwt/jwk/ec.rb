@@ -121,11 +121,11 @@ module JWT
       def encode_octets(octets)
         return unless octets
 
-        ::JWT::Base64.url_encode(octets)
+        Base64.urlsafe_encode64(octets, padding: false)
       end
 
       def encode_open_ssl_bn(key_part)
-        ::JWT::Base64.url_encode(key_part.to_s(BINARY))
+        Base64.urlsafe_encode64(key_part.to_s(BINARY), padding: false)
       end
 
       def parse_ec_key(key)
@@ -206,11 +206,11 @@ module JWT
       end
 
       def decode_octets(jwk_data)
-        ::JWT::Base64.url_decode(jwk_data)
+        Base64.urlsafe_decode64(jwk_data)
       end
 
       def decode_open_ssl_bn(jwk_data)
-        OpenSSL::BN.new(::JWT::Base64.url_decode(jwk_data), BINARY)
+        OpenSSL::BN.new(Base64.urlsafe_decode64(jwk_data), BINARY)
       end
 
       class << self

@@ -65,11 +65,11 @@ module JWT
     end
 
     def encode_signature
-      ::JWT::Base64.url_encode(signature)
+      Base64.urlsafe_encode64(signature, padding: false)
     end
 
     def encode_data(data)
-      ::JWT::Base64.url_encode(JWT::JSON.generate(data))
+      Base64.urlsafe_encode64(JWT::JSON.generate(data), padding: false)
     end
 
     def combine(*parts)
