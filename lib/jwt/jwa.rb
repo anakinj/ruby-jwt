@@ -8,35 +8,34 @@ require 'jwt/jwa/rsa'
 require 'jwt/jwa/ps'
 require 'jwt/jwa/none'
 require 'jwt/jwa/unsupported'
-require 'jwt/jwa/algo_wrapper'
+require 'jwt/jwa/wrapper'
 
 module JWT
   module JWA
-    extend self
-
     ALGOS = [Hmac, Ecdsa, Rsa, Eddsa, Ps, None, Unsupported].freeze
+    class << self
+      def find(algorithm)
+        indexed[algorithm&.downcase]
+      end
 
-    def find(algorithm)
-      indexed[algorithm && algorithm.downcase]
-    end
+      def create(algorithm)
+        Wrapper.new(*find(algorithm))
+      end
 
-    def create(algorithm)
-      AlgoWrapper.new(*find(algorithm))
-    end
+      def implementation?(algorithm)
+        (algorithm.respond_to?(:valid_alg?) && algorithm.respond_to?(:verify)) ||
+          (algorithm.respond_to?(:alg) && algorithm.respond_to?(:sign))
+      end
 
-    def implementation?(algorithm)
-      (algorithm.respond_to?(:valid_alg?) && algorithm.respond_to?(:verify)) ||
-        (algorithm.respond_to?(:alg) && algorithm.respond_to?(:sign))
-    end
+      private
 
-    private
-
-    def indexed
-      @indexed ||= begin
-        fallback = [nil, Unsupported]
-        ALGOS.each_with_object(Hash.new(fallback)) do |cls, hash|
-          cls.const_get(:SUPPORTED).each do |alg|
-            hash[alg.downcase] = [alg, cls]
+      def indexed
+        @indexed ||= begin
+          fallback = [nil, Unsupported]
+          ALGOS.each_with_object(Hash.new(fallback)) do |cls, hash|
+            cls.const_get(:SUPPORTED).each do |alg|
+              hash[alg.downcase] = [alg, cls]
+            end
           end
         end
       end
