@@ -13,7 +13,7 @@ module JWT
       def generate
         ::Base64.urlsafe_encode64(
           Digest::SHA256.digest(
-            JWT::JSON.generate(
+            ::JSON.generate(
               jwk.members.sort.to_h
             )
           ), padding: false

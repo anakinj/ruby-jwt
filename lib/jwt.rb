@@ -7,7 +7,6 @@ rescue LoadError
 end
 
 require 'jwt/version'
-require 'jwt/json'
 require 'jwt/decode'
 require 'jwt/configuration'
 require 'jwt/encode'

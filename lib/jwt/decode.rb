@@ -160,13 +160,13 @@ module JWT
     end
 
     def parse_and_decode(segment)
-      JWT::JSON.parse(decode_b64(segment))
+      ::JSON.parse(decode_b64(segment))
     rescue ::JSON::ParserError
       raise JWT::DecodeError, 'Invalid segment encoding'
     end
 
     def decode_b64(segment)
-      Base64.urlsafe_decode64(segment)
+      ::Base64.urlsafe_decode64(segment)
     rescue ArgumentError
       raise JWT::DecodeError, 'Invalid segment encoding'
     end
