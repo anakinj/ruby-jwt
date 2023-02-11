@@ -288,7 +288,7 @@ RSpec.describe JWT do
           translated_alg  = alg.gsub('PS', 'sha')
           valid_signature = data[:rsa_public].verify_pss(
             translated_alg,
-            ::JWT::Base64.url_decode(signature),
+            Base64.urlsafe_decode64(signature),
             [header, body].join('.'),
             salt_length: :auto,
             mgf1_hash: translated_alg
@@ -617,7 +617,7 @@ RSpec.describe JWT do
 
   context 'when the alg value is given as a header parameter' do
     it 'does not override the actual algorithm used' do
-      headers = JSON.parse(::JWT::Base64.url_decode(JWT.encode('Hello World', 'secret', 'HS256', { alg: 'HS123' }).split('.').first))
+      headers = JSON.parse(Base64.urlsafe_decode64(JWT.encode('Hello World', 'secret', 'HS256', { alg: 'HS123' }).split('.').first))
       expect(headers['alg']).to eq('HS256')
     end
 
@@ -761,13 +761,6 @@ RSpec.describe JWT do
     it 'raises JWT::DecodeError' do
       pending 'Different behaviour on OpenSSL 3.0 (https://github.com/openssl/openssl/issues/13089)' if ::JWT.openssl_3_hmac_empty_key_regression?
       expect { ::JWT.decode(no_key_token, nil, true, algorithms: 'HS512') }.to raise_error(JWT::DecodeError, 'No verification key available')
-    end
-  end
-
-  context 'when token ends with a newline char' do
-    let(:token) { "#{JWT.encode(payload, 'secret', 'HS256')}\n" }
-    it 'ignores the newline and decodes the token' do
-      expect(JWT.decode(token, 'secret', true, algorithm: 'HS256')).to include(payload)
     end
   end
 

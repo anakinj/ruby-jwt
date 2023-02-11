@@ -80,24 +80,24 @@ module JWT
         params = {
           kty: KTY,
           crv: 'Ed25519',
-          x: ::JWT::Base64.url_encode(verify_key.to_bytes)
+          x: Base64.urlsafe_encode64(verify_key.to_bytes, padding: false)
         }
 
         if signing_key
-          params[:d] = ::JWT::Base64.url_encode(signing_key.to_bytes)
+          params[:d] = Base64.urlsafe_encode64(signing_key.to_bytes, padding: false)
         end
 
         params
       end
 
       def verify_key_from_parameters
-        RbNaCl::Signatures::Ed25519::VerifyKey.new(::JWT::Base64.url_decode(self[:x]))
+        RbNaCl::Signatures::Ed25519::VerifyKey.new(Base64.urlsafe_decode64(self[:x]))
       end
 
       def signing_key_from_parameters
         return nil unless self[:d]
 
-        RbNaCl::Signatures::Ed25519::SigningKey.new(::JWT::Base64.url_decode(self[:d]))
+        RbNaCl::Signatures::Ed25519::SigningKey.new(Base64.urlsafe_decode64(self[:d]))
       end
 
       class << self

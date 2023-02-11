@@ -140,7 +140,7 @@ module JWT
     end
 
     def decode_signature
-      @signature = ::JWT::Base64.url_decode(@segments[2] || '')
+      @signature = decode_b64(@segments[2] || '')
     end
 
     def alg_in_header
@@ -148,11 +148,11 @@ module JWT
     end
 
     def header
-      @header ||= parse_and_decode @segments[0]
+      @header ||= parse_and_decode(@segments[0])
     end
 
     def payload
-      @payload ||= parse_and_decode @segments[1]
+      @payload ||= parse_and_decode(@segments[1])
     end
 
     def signing_input
@@ -160,8 +160,14 @@ module JWT
     end
 
     def parse_and_decode(segment)
-      JWT::JSON.parse(::JWT::Base64.url_decode(segment))
+      JWT::JSON.parse(decode_b64(segment))
     rescue ::JSON::ParserError
+      raise JWT::DecodeError, 'Invalid segment encoding'
+    end
+
+    def decode_b64(segment)
+      Base64.urlsafe_decode64(segment)
+    rescue ArgumentError
       raise JWT::DecodeError, 'Invalid segment encoding'
     end
   end

@@ -9,6 +9,7 @@
 **Features:**
 
 - [**Breaking change**] Removed support for the HMAC algorithm HS512256 (HMAC-SHA-512 truncated to 256-bits) [#549](https://github.com/jwt/ruby-jwt/issues/549) ([@anakinj](https://github.com/anakinj))
+- [**Breaking change**] Use built-in base64 encoding/decoding [#551](https://github.com/jwt/ruby-jwt/issues/551) ([@anakinj](https://github.com/anakinj))
 - Only use openssl for HMAC algorithms [#550](https://github.com/jwt/ruby-jwt/issues/550) ([@anakinj](https://github.com/anakinj))
 - Your contribution here
 
