@@ -19,6 +19,8 @@ module JWT
       end
 
       def create(algorithm)
+        return algorithm if JWA.implementation?(algorithm)
+
         Wrapper.new(*find(algorithm))
       end
 

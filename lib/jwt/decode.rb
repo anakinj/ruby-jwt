@@ -17,7 +17,16 @@ module JWT
       @verify = verify
       @signature = ''
       @keyfinder = keyfinder
+
+      decoder = JWT.define do
+        allowed_algorithms(*Array(options['algorithm'] || options[:algorithm] || options['algorithms'] || options[:algorithms]))
+        # keyfinder &keyfinder
+      end
+
+      @decode_context = decoder.decode(token: jwt, verification_key: key)
     end
+
+    attr_reader :decode_context
 
     def decode_segments
       validate_segment_count!
@@ -28,7 +37,6 @@ module JWT
         verify_signature
         verify_claims
       end
-      raise(JWT::DecodeError, 'Not enough or too many segments') unless header && payload
 
       [payload, header]
     end
@@ -122,19 +130,15 @@ module JWT
     end
 
     def validate_segment_count!
-      return if segment_length == 3
-      return if !@verify && segment_length == 2 # If no verifying required, the signature is not needed
-      return if segment_length == 2 && none_algorithm?
+      return if decode_context.token.segment_count == 3
+      return if !@verify && decode_context.token.segment_count == 2 # If no verifying required, the signature is not needed
+      return if decode_context.token.segment_count == 2 && none_algorithm?
 
       raise(JWT::DecodeError, 'Not enough or too many segments')
     end
 
-    def segment_length
-      @segments.count
-    end
-
     def none_algorithm?
-      alg_in_header == 'none'
+      decode_context.token.alg_in_header == 'none'
     end
 
     def decode_signature
@@ -142,25 +146,19 @@ module JWT
     end
 
     def alg_in_header
-      header['alg']
+      decode_context.token.alg_in_header
     end
 
     def header
-      @header ||= parse_and_decode(@segments[0])
+      decode_context.token.header
     end
 
     def payload
-      @payload ||= parse_and_decode(@segments[1])
+      decode_context.token.payload
     end
 
     def signing_input
       @segments.first(2).join('.')
-    end
-
-    def parse_and_decode(segment)
-      ::JSON.parse(decode_b64(segment))
-    rescue ::JSON::ParserError
-      raise JWT::DecodeError, 'Invalid segment encoding'
     end
 
     def decode_b64(segment)
