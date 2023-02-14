@@ -9,20 +9,32 @@ end
 require 'jwt/version'
 require 'jwt/decode'
 require 'jwt/configuration'
-require 'jwt/encode'
 require 'jwt/error'
 require 'jwt/jwk'
+require 'jwt/jwa'
+require 'jwt/claims_validator'
+require 'jwt/dsl'
 
 module JWT
   extend ::JWT::Configuration
 
   module_function
 
-  def encode(payload, key, algorithm = 'HS256', header_fields = {})
-    Encode.new(payload: payload,
-               key: key,
-               algorithm: algorithm,
-               headers: header_fields).segments
+  def define(&block)
+    cls = Class.new do
+      include ::JWT::DSL
+    end.new
+    cls.instance_exec(&block)
+    cls
+  end
+
+  DefaultEncoder = define do
+    signing_algorithm 'HS256'
+    validator PayloadClaimsValidator
+  end
+
+  def encode(payload, key, signing_algorithm = nil, headers = nil)
+    DefaultEncoder.sign_and_encode(payload: payload, signing_key: key, signing_algorithm: signing_algorithm, headers: headers)
   end
 
   def decode(jwt, key = nil, verify = true, options = {}, &keyfinder) # rubocop:disable Style/OptionalBooleanParameter
