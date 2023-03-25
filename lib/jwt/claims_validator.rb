@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require_relative './error'
-
 module JWT
   class ClaimsValidator
     NUMERIC_CLAIMS = %i[

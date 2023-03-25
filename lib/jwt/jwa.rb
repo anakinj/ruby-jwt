@@ -1,14 +1,13 @@
 # frozen_string_literal: true
 
-require 'openssl'
-require 'jwt/jwa/hmac'
-require 'jwt/jwa/eddsa'
-require 'jwt/jwa/ecdsa'
-require 'jwt/jwa/rsa'
-require 'jwt/jwa/ps'
-require 'jwt/jwa/none'
-require 'jwt/jwa/unsupported'
-require 'jwt/jwa/wrapper'
+require_relative 'jwa/hmac'
+require_relative 'jwa/eddsa'
+require_relative 'jwa/ecdsa'
+require_relative 'jwa/rsa'
+require_relative 'jwa/ps'
+require_relative 'jwa/none'
+require_relative 'jwa/unsupported'
+require_relative 'jwa/wrapper'
 
 module JWT
   module JWA
