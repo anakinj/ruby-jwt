@@ -10,7 +10,7 @@ require 'openssl'
 require 'json'
 
 require 'jwt/version'
-require 'jwt/decode'
+require 'jwt/default_decode'
 require 'jwt/configuration'
 require 'jwt/error'
 require 'jwt/jwk'
@@ -41,6 +41,6 @@ module JWT
   end
 
   def decode(jwt, key = nil, verify = true, options = {}, &keyfinder) # rubocop:disable Style/OptionalBooleanParameter
-    Decode.new(jwt, key, verify, configuration.decode.to_h.merge(options), &keyfinder).decode_segments
+    DefaultDecoder.new(jwt, key, verify, configuration.decode.to_h.merge(options), &keyfinder).decode_segments
   end
 end

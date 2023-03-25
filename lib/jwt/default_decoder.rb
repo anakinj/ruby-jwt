@@ -4,7 +4,7 @@ require 'jwt/verify'
 require 'jwt/x5c_key_finder'
 
 module JWT
-  class Decode
+  class DefaultDecoder
     def self.define_decoder(options, keyfinder)
       JWT.define do
         allowed_algorithms(*Array(options['algorithm'] || options[:algorithm] || options['algorithms'] || options[:algorithms]))
