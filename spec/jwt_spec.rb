@@ -701,6 +701,7 @@ RSpec.describe JWT do
       expect(::JWT::X5cKeyFinder).to receive(:new).with(root_certificates, nil).and_return(key_finder)
       expect(key_finder).to receive(:from).and_return(data[:rsa_public])
     end
+
     subject(:decoded_token) { ::JWT.decode(data[alg], nil, true, algorithm: alg, x5c: { root_certificates: root_certificates }) }
 
     it 'calls X5cKeyFinder#from to verify the signature and return the payload' do
@@ -729,7 +730,7 @@ RSpec.describe JWT do
     let(:token) { JWT.encode(payload, 'HS256', 'HS256') }
     it 'decodes the token but does not pass the payload' do
       expect(JWT.decode(token, nil, true, algorithm: 'HS256') do |header, token_payload, nothing|
-        expect(token_payload).to eq(nil) # This behaviour is not correct, the payload should be available in the keyfinder
+        expect(token_payload).to eq({ 'user_id' => 'some@user.tld' })
         expect(nothing).to eq(nil)
         header['alg']
       end).to include(payload)

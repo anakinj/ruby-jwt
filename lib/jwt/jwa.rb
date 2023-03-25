@@ -13,6 +13,7 @@ require 'jwt/jwa/wrapper'
 module JWT
   module JWA
     ALGOS = [Hmac, Ecdsa, Rsa, Eddsa, Ps, None, Unsupported].freeze
+
     class << self
       def find(algorithm)
         indexed[algorithm&.downcase]

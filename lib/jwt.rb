@@ -6,6 +6,9 @@ rescue LoadError
   raise if defined?(RbNaCl)
 end
 
+require 'openssl'
+require 'json'
+
 require 'jwt/version'
 require 'jwt/decode'
 require 'jwt/configuration'
@@ -34,7 +37,7 @@ module JWT
   end
 
   def encode(payload, key, signing_algorithm = nil, headers = nil)
-    DefaultEncoder.sign_and_encode(payload: payload, signing_key: key, signing_algorithm: signing_algorithm, headers: headers)
+    DefaultEncoder.sign_and_encode(payload: payload, headers: headers, signing_key: key, signing_algorithm: signing_algorithm)
   end
 
   def decode(jwt, key = nil, verify = true, options = {}, &keyfinder) # rubocop:disable Style/OptionalBooleanParameter
