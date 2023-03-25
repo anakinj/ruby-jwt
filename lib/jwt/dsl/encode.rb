@@ -42,13 +42,12 @@ module JWT
 
       def sign_and_encode(payload:, headers: nil, signing_algorithm: nil, signing_key: nil)
         validator.validate!(payload)
-        algorithm = if signing_algorithm
-          JWA.create(signing_algorithm)
-        else
-          self.signing_algorithm
-        end
+
+        algorithm = signing_algorithm ? JWA.create(signing_algorithm) : self.signing_algorithm
+
         complete_headers = { 'alg' => algorithm.alg }
         complete_headers.merge!(headers.transform_keys(&:to_s)) if headers
+
         header_and_payload = combine(encode(type: :header, value: complete_headers),
                                      encode(type: :payload, value: payload))
         encoded_signature = encode(type: :signature, value: algorithm.sign(data: header_and_payload, signing_key: signing_key))
