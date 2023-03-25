@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require 'json'
-require 'base64'
-
 module JWT
   module JsonAndBase64Decoder
     def self.decode(type:, value:)

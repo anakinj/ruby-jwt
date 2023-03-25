@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'jwt/error'
-
 module JWT
   # JWT verify methods
   class Verify

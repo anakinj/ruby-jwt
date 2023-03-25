@@ -6,17 +6,17 @@ rescue LoadError
   raise if defined?(RbNaCl)
 end
 
+require 'base64'
 require 'openssl'
 require 'json'
 
-require 'jwt/version'
-require 'jwt/default_decode'
-require 'jwt/configuration'
-require 'jwt/error'
-require 'jwt/jwk'
-require 'jwt/jwa'
-require 'jwt/claims_validator'
-require 'jwt/dsl'
+require_relative 'jwt/version'
+require_relative 'jwt/configuration'
+require_relative 'jwt/error'
+require_relative 'jwt/jwk'
+require_relative 'jwt/jwa'
+require_relative 'jwt/default_decoder'
+require_relative 'jwt/dsl'
 
 module JWT
   extend ::JWT::Configuration
