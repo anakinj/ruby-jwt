@@ -106,9 +106,9 @@ RSpec.describe JWT do
   end
 
   context 'payload validation' do
-    it 'validates the payload with the ClaimsValidator if the payload is a hash' do
+    it 'validates the payload with the NumericClaimsValidator if the payload is a hash' do
       validator = double
-      expect(JWT::Validators::ClaimsValidator).to receive(:new) { validator }
+      expect(JWT::Validators::NumericClaimsValidator).to receive(:new) { validator }
       expect(validator).to receive(:validate!) { true }
 
       payload = {}
@@ -117,7 +117,7 @@ RSpec.describe JWT do
 
     it 'does not validate the payload if it is not present' do
       validator = double
-      expect(JWT::Validators::ClaimsValidator).not_to receive(:new) { validator }
+      expect(JWT::Validators::NumericClaimsValidator).not_to receive(:new) { validator }
 
       payload = nil
       JWT.encode payload, 'secret', 'HS256'

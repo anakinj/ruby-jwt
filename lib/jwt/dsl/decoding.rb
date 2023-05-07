@@ -18,6 +18,11 @@ module JWT
         @verification_key_finder
       end
 
+      def decoding_validator(value = nil)
+        @decoding_validator = value unless value.nil?
+        @decoding_validator || Validators::Noop
+      end
+
       def decode(token:, verification_key: nil)
         DecodeContext.new(token: token,
                           decoder: decoder,

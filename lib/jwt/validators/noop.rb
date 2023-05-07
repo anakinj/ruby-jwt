@@ -3,7 +3,7 @@
 module JWT
   module Validators
     module Noop
-      def self.validate!(payload); end
+      def self.validate!(*args); end
     end
   end
 end

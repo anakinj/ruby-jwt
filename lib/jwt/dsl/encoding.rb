@@ -13,13 +13,13 @@ module JWT
         @encoder || Decoders::Base64Json
       end
 
-      def validator(value = nil)
-        @validator = value unless value.nil?
-        @validator || Validators::Noop
+      def encoding_validator(value = nil)
+        @encoding_validator = value unless value.nil?
+        @encoding_validator || Validators::Noop
       end
 
       def sign_and_encode(payload:, headers: nil, signing_algorithm: nil, signing_key: nil)
-        validator.validate!(payload)
+        encoding_validator.validate!(payload: payload, headers: headers)
 
         algorithm = signing_algorithm ? JWA.create(signing_algorithm) : self.signing_algorithm
 

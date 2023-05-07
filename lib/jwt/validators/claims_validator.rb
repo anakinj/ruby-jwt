@@ -3,40 +3,109 @@
 module JWT
   module Validators
     class ClaimsValidator
-      def self.validate!(payload)
-        return unless payload.is_a?(Hash)
+      DEFAULTS = {
+        leeway: 0
+      }.freeze
 
-        new(payload).validate!
+      class << self
+        %w[verify_aud verify_expiration verify_iat verify_iss verify_jti verify_not_before verify_sub verify_required_claims].each do |method_name|
+          define_method method_name do |payload, options|
+            new(payload, options).send(method_name)
+          end
+        end
+
+        def verify_claims(payload, options)
+          options.each do |key, val|
+            next unless key.to_s =~ /verify/
+
+            send(key, payload, options) if val
+          end
+        end
       end
 
-      NUMERIC_CLAIMS = %i[
-        exp
-        iat
-        nbf
-      ].freeze
-
-      def initialize(payload)
-        @payload = payload.transform_keys(&:to_sym)
+      def initialize(payload, options)
+        @payload = payload
+        @options = DEFAULTS.merge(options)
       end
 
-      def validate!
-        validate_numeric_claims
+      def verify_aud
+        return unless (options_aud = @options[:aud])
 
-        true
+        aud = @payload['aud']
+        raise(JWT::InvalidAudError, "Invalid audience. Expected #{options_aud}, received #{aud || '<none>'}") if ([*aud] & [*options_aud]).empty?
+      end
+
+      def verify_expiration
+        return unless @payload.include?('exp')
+        raise(JWT::ExpiredSignature, 'Signature has expired') if @payload['exp'].to_i <= (Time.now.to_i - exp_leeway)
+      end
+
+      def verify_iat
+        return unless @payload.include?('iat')
+
+        iat = @payload['iat']
+        raise(JWT::InvalidIatError, 'Invalid iat') if !iat.is_a?(Numeric) || iat.to_f > Time.now.to_f
+      end
+
+      def verify_iss
+        return unless (options_iss = @options[:iss])
+
+        iss = @payload['iss']
+
+        options_iss = Array(options_iss).map { |item| item.is_a?(Symbol) ? item.to_s : item }
+
+        case iss
+        when *options_iss
+          nil
+        else
+          raise(JWT::InvalidIssuerError, "Invalid issuer. Expected #{options_iss}, received #{iss || '<none>'}")
+        end
+      end
+
+      def verify_jti
+        options_verify_jti = @options[:verify_jti]
+        jti = @payload['jti']
+
+        if options_verify_jti.respond_to?(:call)
+          verified = options_verify_jti.arity == 2 ? options_verify_jti.call(jti, @payload) : options_verify_jti.call(jti)
+          raise(JWT::InvalidJtiError, 'Invalid jti') unless verified
+        elsif jti.to_s.strip.empty?
+          raise(JWT::InvalidJtiError, 'Missing jti')
+        end
+      end
+
+      def verify_not_before
+        return unless @payload.include?('nbf')
+        raise(JWT::ImmatureSignature, 'Signature nbf has not been reached') if @payload['nbf'].to_i > (Time.now.to_i + nbf_leeway)
+      end
+
+      def verify_sub
+        return unless (options_sub = @options[:sub])
+
+        sub = @payload['sub']
+        raise(JWT::InvalidSubError, "Invalid subject. Expected #{options_sub}, received #{sub || '<none>'}") unless sub.to_s == options_sub.to_s
+      end
+
+      def verify_required_claims
+        return unless (options_required_claims = @options[:required_claims])
+
+        options_required_claims.each do |required_claim|
+          raise(JWT::MissingRequiredClaim, "Missing required claim #{required_claim}") unless @payload.include?(required_claim)
+        end
       end
 
       private
 
-      def validate_numeric_claims
-        NUMERIC_CLAIMS.each do |claim|
-          validate_is_numeric(claim) if @payload.key?(claim)
-        end
+      def global_leeway
+        @options[:leeway]
       end
 
-      def validate_is_numeric(claim)
-        return if @payload[claim].is_a?(Numeric)
+      def exp_leeway
+        @options[:exp_leeway] || global_leeway
+      end
 
-        raise InvalidPayload, "#{claim} claim must be a Numeric value but it is a #{@payload[claim].class}"
+      def nbf_leeway
+        @options[:nbf_leeway] || global_leeway
       end
     end
   end

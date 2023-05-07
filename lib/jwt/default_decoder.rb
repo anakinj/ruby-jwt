@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-require_relative 'verify'
 require_relative 'x5c_key_finder'
 
 module JWT
@@ -103,8 +102,8 @@ module JWT
     end
 
     def verify_claims
-      Verify.verify_claims(payload, @options)
-      Verify.verify_required_claims(payload, @options)
+      Validators::ClaimsValidator.verify_claims(payload, @options)
+      Validators::ClaimsValidator.verify_required_claims(payload, @options)
     end
 
     def validate_segment_count!
