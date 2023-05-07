@@ -1,15 +1,8 @@
 # frozen_string_literal: true
 
 module JWT
-  module JsonAndBase64Encoder
-    def self.encode(type:, value:)
-      value = ::JSON.generate(value) if type != :signature
-      ::Base64.urlsafe_encode64(value, padding: false)
-    end
-  end
-
   module DSL
-    module Encode
+    module Encoding
       def signing_algorithm(value = nil)
         @signing_algorithm = JWA.create(value) unless value.nil?
         @signing_algorithm
@@ -17,7 +10,7 @@ module JWT
 
       def encoder(value = nil)
         @encoder = value unless value.nil?
-        @encoder || JsonAndBase64Encoder
+        @encoder || Decoders::Base64Json
       end
 
       def validator(value = nil)

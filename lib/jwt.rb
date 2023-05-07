@@ -16,10 +16,14 @@ require_relative 'jwt/error'
 require_relative 'jwt/jwk'
 require_relative 'jwt/jwa'
 require_relative 'jwt/default_decoder'
+require_relative 'jwt/token'
+require_relative 'jwt/decode_context'
 require_relative 'jwt/dsl'
 
 require_relative 'jwt/validators/noop'
 require_relative 'jwt/validators/claims_validator'
+
+require_relative 'jwt/decoders/base64_json'
 
 module JWT
   extend ::JWT::Configuration

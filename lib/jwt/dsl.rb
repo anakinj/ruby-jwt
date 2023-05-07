@@ -1,13 +1,13 @@
 # frozen_string_literal: true
 
-require_relative 'dsl/encode'
-require_relative 'dsl/decode'
+require_relative 'dsl/encoding'
+require_relative 'dsl/decoding'
 
 module JWT
   module DSL
     def self.included(cls)
-      cls.include(Encode)
-      cls.include(Decode)
+      cls.include(Encoding)
+      cls.include(Decoding)
     end
   end
 end
