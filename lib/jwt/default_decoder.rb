@@ -2,7 +2,6 @@
 
 require_relative 'verify'
 require_relative 'x5c_key_finder'
-require_relative 'claims_validator'
 
 module JWT
   class DefaultDecoder

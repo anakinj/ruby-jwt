@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe JWT::ClaimsValidator do
+RSpec.describe JWT::Validators::ClaimsValidator do
   let(:validator) { described_class.new(claims) }
 
   describe '#validate!' do

@@ -18,6 +18,9 @@ require_relative 'jwt/jwa'
 require_relative 'jwt/default_decoder'
 require_relative 'jwt/dsl'
 
+require_relative 'jwt/validators/noop'
+require_relative 'jwt/validators/claims_validator'
+
 module JWT
   extend ::JWT::Configuration
 
@@ -33,7 +36,7 @@ module JWT
 
   DefaultEncoder = define do
     signing_algorithm 'HS256'
-    validator PayloadClaimsValidator
+    validator Validators::ClaimsValidator
   end
 
   def encode(payload, key, signing_algorithm = nil, headers = nil)

@@ -8,19 +8,7 @@ module JWT
     end
   end
 
-  module PayloadClaimsValidator
-    def self.validate!(payload)
-      return unless payload.is_a?(Hash)
-
-      ClaimsValidator.new(payload).validate!
-    end
-  end
-
   module DSL
-    module NoopValidator
-      def self.validate!(payload); end
-    end
-
     module Encode
       def signing_algorithm(value = nil)
         @signing_algorithm = JWA.create(value) unless value.nil?
@@ -34,7 +22,7 @@ module JWT
 
       def validator(value = nil)
         @validator = value unless value.nil?
-        @validator || NoopValidator
+        @validator || Validators::Noop
       end
 
       def sign_and_encode(payload:, headers: nil, signing_algorithm: nil, signing_key: nil)
