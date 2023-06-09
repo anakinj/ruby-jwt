@@ -4,38 +4,42 @@ require_relative 'x5c_key_finder'
 
 module JWT
   class DefaultDecoder
-    def self.define_decoder(options, keyfinder)
+    def self.define_decoder(options, keyfinder) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
       JWT.define do
         allowed_algorithms(*Array(options['algorithm'] || options[:algorithm] || options['algorithms'] || options[:algorithms]))
 
+        if options[:verification_key]
+          verification_key(options[:verification_key])
+        end
+
         if keyfinder
-          verification_key_finder(&keyfinder)
+          verification_key(keyfinder)
         end
 
         if options[:jwks]
-          verification_key_finder do |header, _payload|
+          verification_key do |header, _payload|
             ::JWT::JWK::KeyFinder.new(jwks: options[:jwks],
                                       allow_nil_kid: options[:allow_nil_kid]).key_for(header['kid'])
           end
         end
 
         if (x5c_options = options[:x5c])
-          verification_key_finder do |header, _payload|
+          verification_key do |header, _payload|
             X5cKeyFinder.new(x5c_options[:root_certificates], x5c_options[:crls]).from(header['x5c'])
           end
         end
       end
     end
 
-    def initialize(jwt, key, verify, options, &keyfinder)
-      raise(JWT::DecodeError, 'Nil JSON web token') unless jwt
+    def initialize(token:, verify:, keyfinder:, **options)
+      raise(JWT::DecodeError, 'Nil JSON web token') unless token
 
       @options = options
       @verify = verify
 
       decoder = self.class.define_decoder(options, keyfinder)
 
-      @decode_context = decoder.decode(token: jwt, verification_key: key)
+      @decode_context = decoder.decode(token: token)
     end
 
     attr_reader :decode_context

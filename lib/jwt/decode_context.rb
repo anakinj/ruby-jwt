@@ -2,13 +2,12 @@
 
 module JWT
   class DecodeContext
-    attr_reader :token, :allowed_algorithms, :verification_key, :verification_key_finder
+    attr_reader :token, :allowed_algorithms, :verification_key
 
-    def initialize(token:, decoder:, allowed_algorithms:, verification_key:, verification_key_finder:)
+    def initialize(token:, decoder:, allowed_algorithms:, verification_key:)
       @token = Token.new(value: token, decoder: decoder)
       @allowed_algorithms = allowed_algorithms
       @verification_key = verification_key
-      @verification_key_finder = verification_key_finder
     end
 
     def header
@@ -24,7 +23,7 @@ module JWT
     end
 
     def verification_keys
-      @verification_keys ||= Array(verification_key_finder&.call(header, payload) || verification_key).compact
+      @verification_keys ||= Array(resolve_verification_keys).compact
     end
 
     def algorithm_match?
@@ -32,6 +31,12 @@ module JWT
     end
 
     private
+
+    def resolve_verification_keys
+      return verification_key.call(header, payload) if verification_key.respond_to?(:call)
+
+      verification_key
+    end
 
     def valid_signature_for?(key)
       allowed_and_valid_algorithms.any? do |alg|

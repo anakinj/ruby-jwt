@@ -48,6 +48,10 @@ module JWT
   end
 
   def decode(jwt, key = nil, verify = true, options = {}, &keyfinder) # rubocop:disable Style/OptionalBooleanParameter
-    DefaultDecoder.new(jwt, key, verify, configuration.decode.to_h.merge(options), &keyfinder).decode_segments
+    DefaultDecoder.new(token: jwt,
+                       verification_key: key,
+                       verify: verify,
+                       keyfinder: keyfinder,
+                       **configuration.decode.to_h.merge(options)).decode_segments
   end
 end
