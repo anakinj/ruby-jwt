@@ -1,7 +1,5 @@
 # Changelog
 
-# Changelog
-
 ## [v3.0.0](https://github.com/jwt/ruby-jwt/tree/v3.0.0) (FUTURE)
 
 [Full Changelog](https://github.com/jwt/ruby-jwt/compare/v2.7.0...v3.0.0)
@@ -19,18 +17,14 @@
 - Algorithms moved under the `::JWT::JWA` module ([@anakinj](https://github.com/anakinj))
 - Your contribution here
 
-## [v2.8.0](https://github.com/jwt/ruby-jwt/tree/v2.8.0) (NEXT)
+## [v2.7.1](https://github.com/jwt/ruby-jwt/tree/v2.8.0) (2023-06-09)
 
 [Full Changelog](https://github.com/jwt/ruby-jwt/compare/v2.7.0...v2.8.0)
-
-**Features:**
-
-- Your contribution here
 
 **Fixes and enhancements:**
 
 - Handle invalid algorithm when decoding JWT [#559](https://github.com/jwt/ruby-jwt/pull/559) - [@nataliastanko](https://github.com/nataliastanko)
-- Your contribution here
+- Do not raise error when verifying bad HMAC signature [#563](https://github.com/jwt/ruby-jwt/pull/563) - [@hieuk09](https://github.com/hieuk09)
 
 ## [v2.7.0](https://github.com/jwt/ruby-jwt/tree/v2.7.0) (2023-02-01)
 
