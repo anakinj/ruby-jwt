@@ -4,7 +4,7 @@ require_relative 'x5c_key_finder'
 
 module JWT
   class DefaultDecoder
-    def self.define_decoder(options, keyfinder) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+    def self.define_decoder(options) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
       JWT.define do
         allowed_algorithms(*Array(options['algorithm'] || options[:algorithm] || options['algorithms'] || options[:algorithms]))
 
@@ -12,8 +12,8 @@ module JWT
           verification_key(options[:verification_key])
         end
 
-        if keyfinder
-          verification_key(keyfinder)
+        if options[:keyfinder]
+          verification_key(options[:keyfinder])
         end
 
         if options[:jwks]
@@ -31,13 +31,13 @@ module JWT
       end
     end
 
-    def initialize(token:, verify:, keyfinder:, **options)
+    def initialize(token:, verify:, **options)
       raise(JWT::DecodeError, 'Nil JSON web token') unless token
 
       @options = options
       @verify = verify
 
-      decoder = self.class.define_decoder(options, keyfinder)
+      decoder = self.class.define_decoder(options)
 
       @decode_context = decoder.decode(token: token)
     end
