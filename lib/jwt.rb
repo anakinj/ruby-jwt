@@ -52,6 +52,17 @@ module JWT
                        verification_key: key,
                        verify: verify,
                        keyfinder: keyfinder,
+                       allowed_algorithms: normalizde_algorithm_option(options),
                        **configuration.decode.to_h.merge(options)).decode_segments
+  end
+
+  # Order is very important - first check for string keys, next for symbols
+  ALGORITHM_KEYS = ['algorithm',
+                    :algorithm,
+                    'algorithms',
+                    :algorithms].freeze
+  def normalizde_algorithm_option(options)
+    ALGORITHM_KEYS.map { |alg_key| options.delete(alg_key) }.compact.first ||
+      configuration.decode.algorithms
   end
 end

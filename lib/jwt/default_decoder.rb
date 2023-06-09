@@ -4,9 +4,9 @@ require_relative 'x5c_key_finder'
 
 module JWT
   class DefaultDecoder
-    def self.define_decoder(options) # rubocop:disable Metrics/AbcSize, Metrics/CyclomaticComplexity
+    def self.define_decoder(options)
       JWT.define do
-        allowed_algorithms(*Array(options['algorithm'] || options[:algorithm] || options['algorithms'] || options[:algorithms]))
+        allowed_algorithms(*options[:allowed_algorithms])
 
         if options[:verification_key]
           verification_key(options[:verification_key])
@@ -35,10 +35,9 @@ module JWT
       raise(JWT::DecodeError, 'Nil JSON web token') unless token
 
       @options = options
-      @verify = verify
+      @verify  = verify
 
-      decoder = self.class.define_decoder(options)
-
+      decoder         = self.class.define_decoder(options)
       @decode_context = decoder.decode(token: token)
     end
 
@@ -77,26 +76,12 @@ module JWT
       @allowed_and_valid_algorithms ||= allowed_algorithms.select { |alg| alg.valid_alg?(alg_in_header) }
     end
 
-    # Order is very important - first check for string keys, next for symbols
-    ALGORITHM_KEYS = ['algorithm',
-                      :algorithm,
-                      'algorithms',
-                      :algorithms].freeze
-
-    def given_algorithms
-      ALGORITHM_KEYS.each do |alg_key|
-        alg = @options[alg_key]
-        return Array(alg) if alg
-      end
-      []
-    end
-
     def allowed_algorithms
       @allowed_algorithms ||= resolve_allowed_algorithms
     end
 
     def resolve_allowed_algorithms
-      given_algorithms.map do |alg|
+      Array(@options[:allowed_algorithms]).map do |alg|
         if JWA.implementation?(alg)
           alg
         else
