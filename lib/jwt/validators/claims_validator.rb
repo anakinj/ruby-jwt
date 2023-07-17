@@ -8,7 +8,7 @@ module JWT
       }.freeze
 
       class << self
-        %w[verify_aud verify_expiration verify_iat verify_iss verify_jti verify_not_before verify_sub verify_required_claims].each do |method_name|
+        %w[verify_aud verify_expiration verify_iat verify_iss verify_jti verify_sub verify_required_claims].each do |method_name|
           define_method method_name do |payload, options|
             new(payload, options).send(method_name)
           end
@@ -16,7 +16,7 @@ module JWT
 
         def verify_claims(payload, options)
           options.each do |key, val|
-            next unless key.to_s =~ /verify/
+            next unless key.to_s =~ /verify/ && respond_to?(key)
 
             send(key, payload, options) if val
           end
@@ -74,11 +74,6 @@ module JWT
         end
       end
 
-      def verify_not_before
-        return unless @payload.include?('nbf')
-        raise(JWT::ImmatureSignature, 'Signature nbf has not been reached') if @payload['nbf'].to_i > (Time.now.to_i + nbf_leeway)
-      end
-
       def verify_sub
         return unless (options_sub = @options[:sub])
 
@@ -102,10 +97,6 @@ module JWT
 
       def exp_leeway
         @options[:exp_leeway] || global_leeway
-      end
-
-      def nbf_leeway
-        @options[:nbf_leeway] || global_leeway
       end
     end
   end

@@ -249,24 +249,6 @@ RSpec.describe ::JWT::Validators::ClaimsValidator do
     end
   end
 
-  context '.verify_not_before(payload, options)' do
-    let(:payload) { base_payload.merge('nbf' => (Time.now.to_i + 5)) }
-
-    it 'must raise JWT::ImmatureSignature when the nbf in the payload is in the future' do
-      expect do
-        described_class.verify_not_before(payload, options)
-      end.to raise_error JWT::ImmatureSignature
-    end
-
-    it 'must allow some leeway in the token age when global leeway is configured' do
-      described_class.verify_not_before(payload, options.merge(leeway: 10))
-    end
-
-    it 'must allow some leeway in the token age when nbf_leeway is configured' do
-      described_class.verify_not_before(payload, options.merge(nbf_leeway: 10))
-    end
-  end
-
   context '.verify_sub(payload, options)' do
     let(:sub) { 'ruby jwt subject' }
 
@@ -294,7 +276,7 @@ RSpec.describe ::JWT::Validators::ClaimsValidator do
       }
     }
 
-    %w[verify_aud verify_expiration verify_iat verify_iss verify_jti verify_not_before verify_sub].each do |method|
+    %w[verify_aud verify_expiration verify_iat verify_iss verify_jti verify_sub].each do |method|
       let(:payload) { base_payload.merge(fail_verifications_payload) }
       it "must skip verification when #{method} option is set to false" do
         described_class.verify_claims(payload, options.merge(method => false))

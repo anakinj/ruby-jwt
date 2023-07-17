@@ -2,12 +2,13 @@
 
 module JWT
   class DecodeContext
-    attr_reader :token, :allowed_algorithms, :verification_key
+    attr_reader :token, :allowed_algorithms, :verification_key, :validators
 
-    def initialize(token:, decoder:, allowed_algorithms:, verification_key:)
+    def initialize(token:, decoder:, allowed_algorithms:, verification_key:, validators:)
       @token = Token.new(value: token, decoder: decoder)
       @allowed_algorithms = allowed_algorithms
       @verification_key = verification_key
+      @validators = validators
     end
 
     def header
@@ -28,6 +29,10 @@ module JWT
 
     def algorithm_match?
       !allowed_and_valid_algorithms.empty?
+    end
+
+    def validate!
+      validators.each { |validator| validator.validate!(payload: payload, header: header) }
     end
 
     private

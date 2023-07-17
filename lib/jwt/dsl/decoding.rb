@@ -24,11 +24,16 @@ module JWT
         @decoding_validator || Validators::Noop
       end
 
+      def validators
+        @validators ||= []
+      end
+
       def decode(token:, **options)
         DecodeContext.new(**{ token: token,
                               decoder: decoder,
                               allowed_algorithms: allowed_algorithms,
-                              verification_key: verification_key }.merge(options))
+                              verification_key: verification_key,
+                              validators: validators }.merge(options))
       end
     end
   end
