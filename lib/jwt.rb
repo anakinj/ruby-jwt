@@ -54,7 +54,7 @@ module JWT
                        verify: verify,
                        keyfinder: keyfinder,
                        allowed_algorithms: normalizde_algorithm_option(options),
-                       **configuration.decode.to_h.merge(options)).decode_segments
+                       **configuration.decode.to_h.merge(options).transform_keys(&:to_sym)).decode_segments
   end
 
   # Order is very important - first check for string keys, next for symbols
