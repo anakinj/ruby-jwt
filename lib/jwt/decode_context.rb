@@ -20,11 +20,13 @@ module JWT
     end
 
     def valid_signature?
+      return valid_signature_for?(nil) if verification_keys.empty?
+
       verification_keys.any? { |key| valid_signature_for?(key) }
     end
 
     def verification_keys
-      @verification_keys ||= Array(resolve_verification_keys).compact
+      @verification_keys ||= Array(resolve_verification_keys)
     end
 
     def algorithm_match?

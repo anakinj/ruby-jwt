@@ -68,8 +68,6 @@ module JWT
     private
 
     def verify_signature
-      return if none_algorithm?
-
       return if decode_context.valid_signature?
 
       raise JWT::VerificationError, 'Signature verification failed'
@@ -113,7 +111,7 @@ module JWT
     end
 
     def none_algorithm?
-      decode_context.token.alg_in_header == 'none'
+      alg_in_header == 'none'
     end
 
     def alg_in_header
