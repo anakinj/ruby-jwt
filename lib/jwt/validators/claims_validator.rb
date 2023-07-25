@@ -8,7 +8,7 @@ module JWT
       }.freeze
 
       class << self
-        %w[verify_aud verify_expiration verify_iat verify_iss verify_jti verify_sub verify_required_claims].each do |method_name|
+        %w[verify_expiration verify_iat verify_iss verify_jti verify_sub verify_required_claims].each do |method_name|
           define_method method_name do |payload, options|
             new(payload, options).send(method_name)
           end
@@ -26,13 +26,6 @@ module JWT
       def initialize(payload, options)
         @payload = payload
         @options = DEFAULTS.merge(options)
-      end
-
-      def verify_aud
-        return unless (options_aud = @options[:aud])
-
-        aud = @payload['aud']
-        raise(JWT::InvalidAudError, "Invalid audience. Expected #{options_aud}, received #{aud || '<none>'}") if ([*aud] & [*options_aud]).empty?
       end
 
       def verify_expiration

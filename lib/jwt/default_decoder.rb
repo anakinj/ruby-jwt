@@ -4,7 +4,7 @@ require_relative 'x5c_key_finder'
 
 module JWT
   class DefaultDecoder
-    def self.define_decoder(options) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize
+    def self.define_decoder(options) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       JWT.define do
         allowed_algorithms(*options[:allowed_algorithms])
 
@@ -31,6 +31,10 @@ module JWT
 
         if options[:verify_not_before]
           validators << Validators::NotBeforeClaimValidator.new(leeway: options[:nbf_leeway] || options[:leeway])
+        end
+
+        if options[:verify_aud] && options[:aud]
+          validators << Validators::AudienceClaimValidator.new(expected_audience: options[:aud])
         end
       end
     end

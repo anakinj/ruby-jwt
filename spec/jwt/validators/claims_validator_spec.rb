@@ -4,41 +4,6 @@ RSpec.describe ::JWT::Validators::ClaimsValidator do
   let(:base_payload) { { 'user_id' => 'some@user.tld' } }
   let(:options) { { leeway: 0 } }
 
-  context '.verify_aud(payload, options)' do
-    let(:scalar_aud) { 'ruby-jwt-aud' }
-    let(:array_aud) { %w[ruby-jwt-aud test-aud ruby-ruby-ruby] }
-    let(:scalar_payload) { base_payload.merge('aud' => scalar_aud) }
-    let(:array_payload) { base_payload.merge('aud' => array_aud) }
-
-    it 'must raise JWT::InvalidAudError when the singular audience does not match' do
-      expect do
-        described_class.verify_aud(scalar_payload, options.merge(aud: 'no-match'))
-      end.to raise_error JWT::InvalidAudError
-    end
-
-    it 'must raise JWT::InvalidAudError when the payload has an array and none match the supplied value' do
-      expect do
-        described_class.verify_aud(array_payload, options.merge(aud: 'no-match'))
-      end.to raise_error JWT::InvalidAudError
-    end
-
-    it 'must allow a matching singular audience to pass' do
-      described_class.verify_aud(scalar_payload, options.merge(aud: scalar_aud))
-    end
-
-    it 'must allow an array with any value matching the one in the options' do
-      described_class.verify_aud(array_payload, options.merge(aud: array_aud.first))
-    end
-
-    it 'must allow an array with any value matching any value in the options array' do
-      described_class.verify_aud(array_payload, options.merge(aud: array_aud))
-    end
-
-    it 'must allow a singular audience payload matching any value in the options array' do
-      described_class.verify_aud(scalar_payload, options.merge(aud: array_aud))
-    end
-  end
-
   context '.verify_expiration(payload, options)' do
     let(:payload) { base_payload.merge('exp' => (Time.now.to_i - 5)) }
 
@@ -264,7 +229,7 @@ RSpec.describe ::JWT::Validators::ClaimsValidator do
   end
 
   context '.verify_claims' do
-    let(:fail_verifications_options) { { iss: 'mismatched-issuer', aud: 'no-match', sub: 'some subject' } }
+    let(:fail_verifications_options) { { iss: 'mismatched-issuer', sub: 'some subject' } }
     let(:fail_verifications_payload) {
       {
         'exp' => (Time.now.to_i - 50),
@@ -276,7 +241,7 @@ RSpec.describe ::JWT::Validators::ClaimsValidator do
       }
     }
 
-    %w[verify_aud verify_expiration verify_iat verify_iss verify_jti verify_sub].each do |method|
+    %w[verify_expiration verify_iat verify_iss verify_jti verify_sub].each do |method|
       let(:payload) { base_payload.merge(fail_verifications_payload) }
       it "must skip verification when #{method} option is set to false" do
         described_class.verify_claims(payload, options.merge(method => false))
