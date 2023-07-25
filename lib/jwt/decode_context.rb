@@ -32,7 +32,7 @@ module JWT
     end
 
     def validate!
-      validators.each { |validator| validator.validate!(payload: payload, header: header) }
+      validators.each { |validator| validator.validate!(payload: payload, headers: header) }
     end
 
     private

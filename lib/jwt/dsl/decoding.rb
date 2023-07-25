@@ -19,13 +19,8 @@ module JWT
         @verification_key
       end
 
-      def decoding_validator(value = nil)
-        @decoding_validator = value unless value.nil?
-        @decoding_validator || Validators::Noop
-      end
-
-      def validators
-        @validators ||= []
+      def decode_validators
+        @decode_validators ||= []
       end
 
       def decode(token:, **options)
@@ -33,7 +28,7 @@ module JWT
                               decoder: decoder,
                               allowed_algorithms: allowed_algorithms,
                               verification_key: verification_key,
-                              validators: validators }.merge(options))
+                              validators: decode_validators }.merge(options))
       end
     end
   end

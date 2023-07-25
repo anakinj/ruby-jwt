@@ -30,11 +30,11 @@ module JWT
         end
 
         if options[:verify_not_before]
-          validators << Validators::NotBeforeClaimValidator.new(leeway: options[:nbf_leeway] || options[:leeway])
+          decode_validators << Validators::NotBeforeClaimValidator.new(leeway: options[:nbf_leeway] || options[:leeway])
         end
 
         if options[:verify_aud] && options[:aud]
-          validators << Validators::AudienceClaimValidator.new(expected_audience: options[:aud])
+          decode_validators << Validators::AudienceClaimValidator.new(expected_audience: options[:aud])
         end
       end
     end
