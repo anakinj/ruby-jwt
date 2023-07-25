@@ -3,6 +3,7 @@
 require_relative 'x5c_key_finder'
 
 module JWT
+  # This class contains the old logic for decoding JWT tokens. Preserving backwards compatibility as best as possible.
   class DefaultDecoder
     def self.define_decoder(options) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       JWT.define do
@@ -68,7 +69,6 @@ module JWT
 
     def verify_signature
       return if none_algorithm?
-      raise JWT::DecodeError, 'No verification key available' if decode_context.verification_keys.empty?
 
       return if decode_context.valid_signature?
 

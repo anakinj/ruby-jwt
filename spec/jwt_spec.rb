@@ -336,11 +336,6 @@ RSpec.describe JWT do
       end.to raise_error NotImplementedError
     end
 
-    it 'raises "No verification key available" error' do
-      token = JWT.encode({}, 'foo')
-      expect { JWT.decode(token, nil, true) }.to raise_error(JWT::DecodeError, 'No verification key available')
-    end
-
     it 'ECDSA curve_name should raise JWT::IncorrectAlgorithm' do
       key = OpenSSL::PKey::EC.generate('secp256k1')
 
@@ -755,14 +750,6 @@ RSpec.describe JWT do
     let(:none_token) { ::JWT.encode(payload, nil, 'none') }
     it 'decodes the token' do
       expect(::JWT.decode(none_token, 'key', false)).to eq([payload, { 'alg' => 'none' }])
-    end
-  end
-
-  describe 'when token signed with nil and decoded with nil' do
-    let(:no_key_token) { ::JWT.encode(payload, nil, 'HS512') }
-    it 'raises JWT::DecodeError' do
-      pending 'Different behaviour on OpenSSL 3.0 (https://github.com/openssl/openssl/issues/13089)' if ::JWT.openssl_3_hmac_empty_key_regression?
-      expect { ::JWT.decode(no_key_token, nil, true, algorithms: 'HS512') }.to raise_error(JWT::DecodeError, 'No verification key available')
     end
   end
 
