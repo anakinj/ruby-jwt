@@ -588,6 +588,14 @@ RSpec.describe JWT do
     end
   end
 
+  context 'when a token has 2 segments and verification is not required on decode' do
+    let(:token) { ['eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9', 'eyJ1c2VyX2lkIjo1NCwiZXhwIjoxNTA0MzkwODA0fQ'].join('.') }
+
+    it 'does not care about the signature missing' do
+      expect(JWT.decode(token, nil, false)).to eq([{ 'exp' => 1_504_390_804, 'user_id' => 54 }, { 'alg' => 'HS256', 'typ' => 'JWT' }])
+    end
+  end
+
   it 'should not verify token even if the payload has claims' do
     head = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9'
     load = 'eyJ1c2VyX2lkIjo1NCwiZXhwIjoxNTA0MzkwODA0fQ'
