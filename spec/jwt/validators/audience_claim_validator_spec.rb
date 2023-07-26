@@ -7,7 +7,7 @@ RSpec.describe JWT::Validators::AudienceClaimValidator do
     let(:scalar_aud) { 'ruby-jwt-aud' }
     let(:array_aud) { %w[ruby-jwt-aud test-aud ruby-ruby-ruby] }
 
-    subject(:validate!) { described_class.new(expected_audience: expected_audience).validate!(payload: payload) }
+    subject(:validate!) { described_class.new(expected_audience: expected_audience).validate!(context: Struct.new(:payload).new(payload)) }
 
     context 'when the singular audience does not match' do
       let(:expected_audience) { 'no-match' }

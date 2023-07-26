@@ -39,8 +39,10 @@ module JWT
       !allowed_and_valid_algorithms.empty?
     end
 
-    def validate!
-      validators.each { |validator| validator.validate!(payload: payload, headers: header) }
+    def validate!(type)
+      validators
+        .select { |validator| validator.type?(type) }
+        .each { |validator| validator.validate!(context: self) }
     end
 
     private

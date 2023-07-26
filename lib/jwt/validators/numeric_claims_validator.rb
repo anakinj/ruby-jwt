@@ -9,6 +9,10 @@ module JWT
         new(payload).validate!
       end
 
+      def self.type?(type)
+        type == :claims
+      end
+
       NUMERIC_CLAIMS = %i[
         exp
         iat

@@ -5,8 +5,8 @@ require_relative 'x5c_key_finder'
 module JWT
   # This class contains the old logic for decoding JWT tokens. Preserving backwards compatibility as best as possible.
   class DefaultDecoder
-    def self.define_decoder(options) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
-      JWT.define do
+    def self.define_decoder(verify:, **options) # rubocop:disable Metrics/MethodLength, Metrics/AbcSize, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
+      JWT.define do # rubocop:disable Metrics/BlockLength
         allowed_algorithms(*options[:allowed_algorithms])
 
         if options[:verification_key]
@@ -30,12 +30,19 @@ module JWT
           end
         end
 
-        if options[:verify_not_before]
-          decode_validators << Validators::NotBeforeClaimValidator.new(leeway: options[:nbf_leeway] || options[:leeway])
-        end
+        if verify
+          decode_validators << Validators::TokenSegmentValidator.new(min_segment_count: 3)
 
-        if options[:verify_aud] && options[:aud]
-          decode_validators << Validators::AudienceClaimValidator.new(expected_audience: options[:aud])
+          if options[:verify_not_before]
+            decode_validators << Validators::NotBeforeClaimValidator.new(leeway: options[:nbf_leeway] || options[:leeway])
+          end
+
+          if options[:verify_aud] && options[:aud]
+            decode_validators << Validators::AudienceClaimValidator.new(expected_audience: options[:aud])
+          end
+        else
+          # If no verifying required, the signature is not required
+          decode_validators << Validators::TokenSegmentValidator.new(min_segment_count: 2)
         end
       end
     end
@@ -46,19 +53,18 @@ module JWT
       @options = options
       @verify  = verify
 
-      decoder         = self.class.define_decoder(options)
+      decoder         = self.class.define_decoder(verify: verify, **options)
       @decode_context = decoder.decode(token: token)
     end
 
     attr_reader :decode_context
 
     def decode_segments
-      validate_segment_count!
-
+      decode_context.validate!(:raw_token)
       if @verify
         verify_algo
         decode_context.validate_signature!
-        decode_context.validate!
+        decode_context.validate!(:claims)
         verify_claims
       end
 
@@ -94,18 +100,6 @@ module JWT
     def verify_claims
       Validators::ClaimsValidator.verify_claims(payload, @options)
       Validators::ClaimsValidator.verify_required_claims(payload, @options)
-    end
-
-    def validate_segment_count!
-      return if decode_context.token.segment_count == 3
-      return if !@verify && decode_context.token.segment_count == 2 # If no verifying required, the signature is not required
-      return if decode_context.token.segment_count == 2 && none_algorithm?
-
-      raise(JWT::DecodeError, 'Not enough or too many segments')
-    end
-
-    def none_algorithm?
-      alg_in_header == 'none'
     end
 
     def alg_in_header
