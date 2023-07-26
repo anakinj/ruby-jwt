@@ -57,7 +57,7 @@ module JWT
 
       if @verify
         verify_algo
-        verify_signature
+        decode_context.validate_signature!
         decode_context.validate!
         verify_claims
       end
@@ -66,12 +66,6 @@ module JWT
     end
 
     private
-
-    def verify_signature
-      return if decode_context.valid_signature?
-
-      raise JWT::VerificationError, 'Signature verification failed'
-    end
 
     def verify_algo
       raise(JWT::IncorrectAlgorithm, 'An algorithm must be specified') if allowed_algorithms.empty?

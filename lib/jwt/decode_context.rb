@@ -25,6 +25,12 @@ module JWT
       verification_keys.any? { |key| valid_signature_for?(key) }
     end
 
+    def validate_signature!
+      return if valid_signature?
+
+      raise JWT::VerificationError, 'Signature verification failed'
+    end
+
     def verification_keys
       @verification_keys ||= Array(resolve_verification_keys)
     end
