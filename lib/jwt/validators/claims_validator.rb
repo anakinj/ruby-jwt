@@ -8,7 +8,7 @@ module JWT
       }.freeze
 
       class << self
-        %w[verify_iat verify_iss verify_jti verify_sub verify_required_claims].each do |method_name|
+        %w[verify_iat verify_iss verify_jti verify_required_claims].each do |method_name|
           define_method method_name do |payload, options|
             new(payload, options).send(method_name)
           end
@@ -60,13 +60,6 @@ module JWT
         elsif jti.to_s.strip.empty?
           raise(JWT::InvalidJtiError, 'Missing jti')
         end
-      end
-
-      def verify_sub
-        return unless (options_sub = @options[:sub])
-
-        sub = @payload['sub']
-        raise(JWT::InvalidSubError, "Invalid subject. Expected #{options_sub}, received #{sub || '<none>'}") unless sub.to_s == options_sub.to_s
       end
 
       def verify_required_claims

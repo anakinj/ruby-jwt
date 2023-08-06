@@ -44,6 +44,10 @@ module JWT
           if options[:verify_aud] && options[:aud]
             decode_validators << Validators::AudienceClaimValidator.new(expected_audience: options[:aud])
           end
+
+          if options[:verify_sub] && options[:sub]
+            decode_validators << Validators::SubjectClaimValidator.new(expected_subject: options[:sub])
+          end
         else
           # If no verifying required, the signature is not required
           decode_validators << Validators::TokenSegmentValidator.new(min_segment_count: 2)

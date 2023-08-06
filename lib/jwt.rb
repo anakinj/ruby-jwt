@@ -25,6 +25,7 @@ require_relative 'jwt/validators/claims_validator'
 require_relative 'jwt/validators/expiration_claim_validator'
 require_relative 'jwt/validators/not_before_claim_validator'
 require_relative 'jwt/validators/numeric_claims_validator'
+require_relative 'jwt/validators/subject_claim_validator'
 require_relative 'jwt/validators/token_segement_validator'
 
 require_relative 'jwt/decoders/base64_json'

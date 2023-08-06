@@ -183,20 +183,6 @@ RSpec.describe ::JWT::Validators::ClaimsValidator do
     end
   end
 
-  context '.verify_sub(payload, options)' do
-    let(:sub) { 'ruby jwt subject' }
-
-    it 'must raise JWT::InvalidSubError when the subjects do not match' do
-      expect do
-        described_class.verify_sub(base_payload.merge('sub' => 'not-a-match'), options.merge(sub: sub))
-      end.to raise_error JWT::InvalidSubError
-    end
-
-    it 'must allow a matching sub' do
-      described_class.verify_sub(base_payload.merge('sub' => sub), options.merge(sub: sub))
-    end
-  end
-
   context '.verify_claims' do
     let(:fail_verifications_options) { { iss: 'mismatched-issuer', sub: 'some subject' } }
     let(:fail_verifications_payload) {
@@ -210,7 +196,7 @@ RSpec.describe ::JWT::Validators::ClaimsValidator do
       }
     }
 
-    %w[verify_iat verify_iss verify_jti verify_sub].each do |method|
+    %w[verify_iat verify_iss verify_jti].each do |method|
       let(:payload) { base_payload.merge(fail_verifications_payload) }
       it "must skip verification when #{method} option is set to false" do
         described_class.verify_claims(payload, options.merge(method => false))
