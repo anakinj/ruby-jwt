@@ -5,46 +5,6 @@ RSpec.describe ::JWT::Validators::ClaimsValidator do
   let(:string_payload) { 'beautyexperts_nbf_iat' }
   let(:options) { { leeway: 0 } }
 
-  context '.verify_expiration(payload, options)' do
-    let(:payload) { base_payload.merge('exp' => (Time.now.to_i - 5)) }
-
-    it 'must raise JWT::ExpiredSignature when the token has expired' do
-      expect do
-        described_class.verify_expiration(payload, options)
-      end.to raise_error JWT::ExpiredSignature
-    end
-
-    it 'must allow some leeway in the expiration when global leeway is configured' do
-      described_class.verify_expiration(payload, options.merge(leeway: 10))
-    end
-
-    it 'must allow some leeway in the expiration when exp_leeway is configured' do
-      described_class.verify_expiration(payload, options.merge(exp_leeway: 10))
-    end
-
-    it 'must be expired if the exp claim equals the current time' do
-      payload['exp'] = Time.now.to_i
-
-      expect do
-        described_class.verify_expiration(payload, options)
-      end.to raise_error JWT::ExpiredSignature
-    end
-
-    it 'must not consider string containing exp as expired' do
-      expect(described_class.verify_expiration(string_payload, options)).to eq(nil)
-    end
-
-    context 'when leeway is not specified' do
-      let(:options) { {} }
-
-      it 'used a default leeway of 0' do
-        expect do
-          described_class.verify_expiration(payload, options)
-        end.to raise_error JWT::ExpiredSignature
-      end
-    end
-  end
-
   context '.verify_iat(payload, options)' do
     let(:iat) { Time.now.to_f }
     let(:payload) { base_payload.merge('iat' => iat) }
@@ -250,7 +210,7 @@ RSpec.describe ::JWT::Validators::ClaimsValidator do
       }
     }
 
-    %w[verify_expiration verify_iat verify_iss verify_jti verify_sub].each do |method|
+    %w[verify_iat verify_iss verify_jti verify_sub].each do |method|
       let(:payload) { base_payload.merge(fail_verifications_payload) }
       it "must skip verification when #{method} option is set to false" do
         described_class.verify_claims(payload, options.merge(method => false))

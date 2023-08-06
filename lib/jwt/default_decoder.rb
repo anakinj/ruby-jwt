@@ -33,6 +33,10 @@ module JWT
         if verify
           decode_validators << Validators::TokenSegmentValidator.new(min_segment_count: 3)
 
+          if options[:verify_expiration]
+            decode_validators << Validators::ExpirationClaimValidator.new(leeway: options[:exp_leeway] || options[:leeway])
+          end
+
           if options[:verify_not_before]
             decode_validators << Validators::NotBeforeClaimValidator.new(leeway: options[:nbf_leeway] || options[:leeway])
           end

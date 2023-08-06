@@ -8,7 +8,7 @@ module JWT
       }.freeze
 
       class << self
-        %w[verify_expiration verify_iat verify_iss verify_jti verify_sub verify_required_claims].each do |method_name|
+        %w[verify_iat verify_iss verify_jti verify_sub verify_required_claims].each do |method_name|
           define_method method_name do |payload, options|
             new(payload, options).send(method_name)
           end
@@ -26,11 +26,6 @@ module JWT
       def initialize(payload, options)
         @payload = payload
         @options = DEFAULTS.merge(options)
-      end
-
-      def verify_expiration
-        return unless contains_key?(@payload, 'exp')
-        raise(JWT::ExpiredSignature, 'Signature has expired') if @payload['exp'].to_i <= (Time.now.to_i - exp_leeway)
       end
 
       def verify_iat
