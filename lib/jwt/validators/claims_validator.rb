@@ -3,10 +3,6 @@
 module JWT
   module Validators
     class ClaimsValidator
-      DEFAULTS = {
-        leeway: 0
-      }.freeze
-
       class << self
         %w[verify_iat verify_iss verify_jti verify_required_claims].each do |method_name|
           define_method method_name do |payload, options|
@@ -25,7 +21,7 @@ module JWT
 
       def initialize(payload, options)
         @payload = payload
-        @options = DEFAULTS.merge(options)
+        @options = options
       end
 
       def verify_iat
@@ -71,14 +67,6 @@ module JWT
       end
 
       private
-
-      def global_leeway
-        @options[:leeway]
-      end
-
-      def exp_leeway
-        @options[:exp_leeway] || global_leeway
-      end
 
       def contains_key?(payload, key)
         payload.respond_to?(:key?) && payload.key?(key)
