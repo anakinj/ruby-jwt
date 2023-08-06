@@ -695,6 +695,35 @@ RSpec.describe JWT do
     end
   end
 
+  describe 'expiration claim validation' do
+    let(:token) { JWT.encode(payload, 'secret', 'HS256') }
+    let(:options) { {} }
+    subject(:decoded_token) { ::JWT.decode(token, 'secret', true, options) }
+
+    context 'when exp is set in the past' do
+      let(:payload) { {  'exp' => (Time.now.to_i - 10) } }
+      it 'raises ExpiredSignature when token is expired' do
+        expect { decoded_token }.to raise_error(JWT::ExpiredSignature)
+      end
+    end
+
+    context 'when exp is in the past and verification is disabled' do
+      let(:payload) { { 'exp' => (Time.now.to_i - 10) } }
+      let(:options) { { verify_expiration: false } }
+      it 'decodes the token' do
+        expect(decoded_token).to be_an(Array)
+      end
+    end
+
+    context 'when exp_leeway is given' do
+      let(:payload) { { 'exp' => (Time.now.to_i - 25) } }
+      let(:options) { { exp_leeway: 30 } }
+      it 'decodes the token' do
+        expect(decoded_token).to be_an(Array)
+      end
+    end
+  end
+
   describe '::JWT.decode with x5c parameter' do
     let(:alg) { 'RS256' }
     let(:root_certificates) { [instance_double('OpenSSL::X509::Certificate')] }
