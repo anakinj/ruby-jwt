@@ -29,12 +29,12 @@ module JWT
       end
 
       def verify_expiration
-        return unless @payload.include?('exp')
+        return unless contains_key?(@payload, 'exp')
         raise(JWT::ExpiredSignature, 'Signature has expired') if @payload['exp'].to_i <= (Time.now.to_i - exp_leeway)
       end
 
       def verify_iat
-        return unless @payload.include?('iat')
+        return unless contains_key?(@payload, 'iat')
 
         iat = @payload['iat']
         raise(JWT::InvalidIatError, 'Invalid iat') if !iat.is_a?(Numeric) || iat.to_f > Time.now.to_f
@@ -90,6 +90,10 @@ module JWT
 
       def exp_leeway
         @options[:exp_leeway] || global_leeway
+      end
+
+      def contains_key?(payload, key)
+        payload.respond_to?(:key?) && payload.key?(key)
       end
     end
   end

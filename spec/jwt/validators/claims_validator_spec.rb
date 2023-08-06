@@ -2,6 +2,7 @@
 
 RSpec.describe ::JWT::Validators::ClaimsValidator do
   let(:base_payload) { { 'user_id' => 'some@user.tld' } }
+  let(:string_payload) { 'beautyexperts_nbf_iat' }
   let(:options) { { leeway: 0 } }
 
   context '.verify_expiration(payload, options)' do
@@ -27,6 +28,10 @@ RSpec.describe ::JWT::Validators::ClaimsValidator do
       expect do
         described_class.verify_expiration(payload, options)
       end.to raise_error JWT::ExpiredSignature
+    end
+
+    it 'must not consider string containing exp as expired' do
+      expect(described_class.verify_expiration(string_payload, options)).to eq(nil)
     end
 
     context 'when leeway is not specified' do
@@ -67,6 +72,10 @@ RSpec.describe ::JWT::Validators::ClaimsValidator do
       expect do
         described_class.verify_iat(payload.merge('iat' => (iat + 120)), options)
       end.to raise_error JWT::InvalidIatError
+    end
+
+    it 'must not validate if the payload is a string containing iat' do
+      expect(described_class.verify_iat(string_payload, options)).to eq(nil)
     end
   end
 
