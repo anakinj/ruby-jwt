@@ -724,6 +724,42 @@ RSpec.describe JWT do
     end
   end
 
+  describe 'subject claim validation' do
+    let(:token) { JWT.encode(payload, 'secret', 'HS256') }
+    let(:options) { { verify_sub: true, sub: 'expected_sub' } }
+    subject(:decoded_token) { ::JWT.decode(token, 'secret', true, options) }
+
+    context 'when sub does not match' do
+      let(:payload) { { 'sub' => 'not_expected_sub' } }
+      it 'raises InvalidSubError' do
+        expect { decoded_token }.to raise_error(JWT::InvalidSubError, 'Invalid subject. Expected expected_sub, received not_expected_sub')
+      end
+    end
+
+    context 'when sub is an integer' do
+      let(:options) { { verify_sub: true, sub: '1' } }
+      let(:payload) { { 'sub' => 1 } }
+      it 'decodes the token' do
+        expect(decoded_token).to be_an(Array)
+      end
+    end
+
+    context 'when sub matches' do
+      let(:payload) { { 'sub' => 'expected_sub' } }
+      it 'decodes the token' do
+        expect(decoded_token).to be_an(Array)
+      end
+    end
+
+    context 'when verify_sub is not given' do
+      let(:options) { { sub: 'expected_sub' } }
+      let(:payload) { { 'sub' => 'not_expected_sub' } }
+      it 'decodes the token' do
+        expect(decoded_token).to be_an(Array)
+      end
+    end
+  end
+
   describe '::JWT.decode with x5c parameter' do
     let(:alg) { 'RS256' }
     let(:root_certificates) { [instance_double('OpenSSL::X509::Certificate')] }
