@@ -4,7 +4,7 @@ module JWT
   module Validators
     class ClaimsValidator
       class << self
-        %w[verify_iss verify_jti verify_required_claims].each do |method_name|
+        %w[verify_iss verify_jti].each do |method_name|
           define_method method_name do |payload, options|
             new(payload, options).send(method_name)
           end
@@ -49,12 +49,6 @@ module JWT
         elsif jti.to_s.strip.empty?
           raise(JWT::InvalidJtiError, 'Missing jti')
         end
-      end
-
-      private
-
-      def contains_key?(payload, key)
-        payload.respond_to?(:key?) && payload.key?(key)
       end
     end
   end
