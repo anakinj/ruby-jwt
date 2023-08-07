@@ -4,7 +4,7 @@ module JWT
   module Validators
     class ClaimsValidator
       class << self
-        %w[verify_iat verify_iss verify_jti verify_required_claims].each do |method_name|
+        %w[verify_iss verify_jti verify_required_claims].each do |method_name|
           define_method method_name do |payload, options|
             new(payload, options).send(method_name)
           end
@@ -22,13 +22,6 @@ module JWT
       def initialize(payload, options)
         @payload = payload
         @options = options
-      end
-
-      def verify_iat
-        return unless contains_key?(@payload, 'iat')
-
-        iat = @payload['iat']
-        raise(JWT::InvalidIatError, 'Invalid iat') if !iat.is_a?(Numeric) || iat.to_f > Time.now.to_f
       end
 
       def verify_iss

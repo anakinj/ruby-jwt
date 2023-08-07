@@ -5,40 +5,6 @@ RSpec.describe ::JWT::Validators::ClaimsValidator do
   let(:string_payload) { 'beautyexperts_nbf_iat' }
   let(:options) { { leeway: 0 } }
 
-  context '.verify_iat(payload, options)' do
-    let(:iat) { Time.now.to_f }
-    let(:payload) { base_payload.merge('iat' => iat) }
-
-    it 'must allow a valid iat' do
-      described_class.verify_iat(payload, options)
-    end
-
-    it 'must ignore configured leeway' do
-      expect { described_class.verify_iat(payload.merge('iat' => (iat + 60)), options.merge(leeway: 70)) }
-        .to raise_error(JWT::InvalidIatError)
-    end
-
-    it 'must properly handle integer times' do
-      described_class.verify_iat(payload.merge('iat' => Time.now.to_i), options)
-    end
-
-    it 'must raise JWT::InvalidIatError when the iat value is not Numeric' do
-      expect do
-        described_class.verify_iat(payload.merge('iat' => 'not a number'), options)
-      end.to raise_error JWT::InvalidIatError
-    end
-
-    it 'must raise JWT::InvalidIatError when the iat value is in the future' do
-      expect do
-        described_class.verify_iat(payload.merge('iat' => (iat + 120)), options)
-      end.to raise_error JWT::InvalidIatError
-    end
-
-    it 'must not validate if the payload is a string containing iat' do
-      expect(described_class.verify_iat(string_payload, options)).to eq(nil)
-    end
-  end
-
   context '.verify_iss(payload, options)' do
     let(:iss) { 'ruby-jwt-gem' }
     let(:payload) { base_payload.merge('iss' => iss) }
@@ -196,7 +162,7 @@ RSpec.describe ::JWT::Validators::ClaimsValidator do
       }
     }
 
-    %w[verify_iat verify_iss verify_jti].each do |method|
+    %w[verify_iss verify_jti].each do |method|
       let(:payload) { base_payload.merge(fail_verifications_payload) }
       it "must skip verification when #{method} option is set to false" do
         described_class.verify_claims(payload, options.merge(method => false))

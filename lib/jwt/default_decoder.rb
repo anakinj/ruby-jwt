@@ -41,6 +41,10 @@ module JWT
             decode_validators << Validators::NotBeforeClaimValidator.new(leeway: options[:nbf_leeway] || options[:leeway])
           end
 
+          if options[:verify_iat]
+            decode_validators << Validators::IssuedAtClaimValidator.new
+          end
+
           if options[:verify_aud] && options[:aud]
             decode_validators << Validators::AudienceClaimValidator.new(expected_audience: options[:aud])
           end
