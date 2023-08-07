@@ -52,6 +52,10 @@ module JWT
           if options[:verify_sub] && options[:sub]
             decode_validators << Validators::SubjectClaimValidator.new(expected_subject: options[:sub])
           end
+
+          if Array(options[:required_claims]).any?
+            decode_validators << Validators::RequiredClaimsValidator.new(required_claims: options[:required_claims])
+          end
         else
           # If no verifying required, the signature is not required
           decode_validators << Validators::TokenSegmentValidator.new(min_segment_count: 2)
@@ -111,7 +115,6 @@ module JWT
 
     def verify_claims
       Validators::ClaimsValidator.verify_claims(payload, @options)
-      Validators::ClaimsValidator.verify_required_claims(payload, @options)
     end
 
     def alg_in_header

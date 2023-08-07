@@ -51,14 +51,6 @@ module JWT
         end
       end
 
-      def verify_required_claims
-        return unless (options_required_claims = @options[:required_claims])
-
-        options_required_claims.each do |required_claim|
-          raise(JWT::MissingRequiredClaim, "Missing required claim #{required_claim}") unless @payload.include?(required_claim)
-        end
-      end
-
       private
 
       def contains_key?(payload, key)
