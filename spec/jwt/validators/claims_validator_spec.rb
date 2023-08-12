@@ -5,107 +5,6 @@ RSpec.describe ::JWT::Validators::ClaimsValidator do
   let(:string_payload) { 'beautyexperts_nbf_iat' }
   let(:options) { { leeway: 0 } }
 
-  context '.verify_iss(payload, options)' do
-    let(:iss) { 'ruby-jwt-gem' }
-    let(:payload) { base_payload.merge('iss' => iss) }
-
-    let(:invalid_token) { JWT.encode base_payload, payload[:secret] }
-
-    context 'when iss is a String' do
-      it 'must raise JWT::InvalidIssuerError when the configured issuer does not match the payload issuer' do
-        expect do
-          described_class.verify_iss(payload, options.merge(iss: 'mismatched-issuer'))
-        end.to raise_error JWT::InvalidIssuerError
-      end
-
-      it 'must raise JWT::InvalidIssuerError when the payload does not include an issuer' do
-        expect do
-          described_class.verify_iss(base_payload, options.merge(iss: iss))
-        end.to raise_error(JWT::InvalidIssuerError, /received <none>/)
-      end
-
-      it 'must allow a matching issuer to pass' do
-        described_class.verify_iss(payload, options.merge(iss: iss))
-      end
-    end
-    context 'when iss is an Array' do
-      it 'must raise JWT::InvalidIssuerError when no matching issuers in array' do
-        expect do
-          described_class.verify_iss(payload, options.merge(iss: %w[first second]))
-        end.to raise_error JWT::InvalidIssuerError
-      end
-
-      it 'must raise JWT::InvalidIssuerError when the payload does not include an issuer' do
-        expect do
-          described_class.verify_iss(base_payload, options.merge(iss: %w[first second]))
-        end.to raise_error(JWT::InvalidIssuerError, /received <none>/)
-      end
-
-      it 'must allow an array with matching issuer to pass' do
-        described_class.verify_iss(payload, options.merge(iss: ['first', iss, 'third']))
-      end
-    end
-    context 'when iss is a RegExp' do
-      it 'must raise JWT::InvalidIssuerError when the regular expression does not match' do
-        expect do
-          described_class.verify_iss(payload, options.merge(iss: /\A(first|second)\z/))
-        end.to raise_error JWT::InvalidIssuerError
-      end
-
-      it 'must raise JWT::InvalidIssuerError when the payload does not include an issuer' do
-        expect do
-          described_class.verify_iss(base_payload, options.merge(iss: /\A(first|second)\z/))
-        end.to raise_error(JWT::InvalidIssuerError, /received <none>/)
-      end
-
-      it 'must allow a regular expression matching the issuer to pass' do
-        described_class.verify_iss(payload, options.merge(iss: /\A(first|#{iss}|third)\z/))
-      end
-    end
-    context 'when iss is a Proc' do
-      it 'must raise JWT::InvalidIssuerError when the proc returns false' do
-        expect do
-          described_class.verify_iss(payload, options.merge(iss: ->(iss) { iss && iss.start_with?('first') }))
-        end.to raise_error JWT::InvalidIssuerError
-      end
-
-      it 'must raise JWT::InvalidIssuerError when the payload does not include an issuer' do
-        expect do
-          described_class.verify_iss(base_payload, options.merge(iss: ->(iss) { iss && iss.start_with?('first') }))
-        end.to raise_error(JWT::InvalidIssuerError, /received <none>/)
-      end
-
-      it 'must allow a proc that returns true to pass' do
-        described_class.verify_iss(payload, options.merge(iss: ->(iss) { iss && iss.start_with?('ruby') }))
-      end
-    end
-    context 'when iss is a Method instance' do
-      def issuer_start_with_first?(issuer)
-        issuer&.start_with?('first')
-      end
-
-      def issuer_start_with_ruby?(issuer)
-        issuer&.start_with?('ruby')
-      end
-
-      it 'must raise JWT::InvalidIssuerError when the method returns false' do
-        expect do
-          described_class.verify_iss(payload, options.merge(iss: method(:issuer_start_with_first?)))
-        end.to raise_error JWT::InvalidIssuerError
-      end
-
-      it 'must raise JWT::InvalidIssuerError when the payload does not include an issuer' do
-        expect do
-          described_class.verify_iss(base_payload, options.merge(iss: method(:issuer_start_with_first?)))
-        end.to raise_error(JWT::InvalidIssuerError, /received <none>/)
-      end
-
-      it 'must allow a method that returns true to pass' do
-        described_class.verify_iss(payload, options.merge(iss: method(:issuer_start_with_ruby?)))
-      end
-    end
-  end
-
   context '.verify_jti(payload, options)' do
     let(:payload) { base_payload.merge('jti' => 'some-random-uuid-or-whatever') }
 
@@ -162,7 +61,7 @@ RSpec.describe ::JWT::Validators::ClaimsValidator do
       }
     }
 
-    %w[verify_iss verify_jti].each do |method|
+    %w[verify_jti].each do |method|
       let(:payload) { base_payload.merge(fail_verifications_payload) }
       it "must skip verification when #{method} option is set to false" do
         described_class.verify_claims(payload, options.merge(method => false))

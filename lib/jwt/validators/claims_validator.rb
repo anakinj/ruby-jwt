@@ -4,7 +4,7 @@ module JWT
   module Validators
     class ClaimsValidator
       class << self
-        %w[verify_iss verify_jti].each do |method_name|
+        %w[verify_jti].each do |method_name|
           define_method method_name do |payload, options|
             new(payload, options).send(method_name)
           end
@@ -22,21 +22,6 @@ module JWT
       def initialize(payload, options)
         @payload = payload
         @options = options
-      end
-
-      def verify_iss
-        return unless (options_iss = @options[:iss])
-
-        iss = @payload['iss']
-
-        options_iss = Array(options_iss).map { |item| item.is_a?(Symbol) ? item.to_s : item }
-
-        case iss
-        when *options_iss
-          nil
-        else
-          raise(JWT::InvalidIssuerError, "Invalid issuer. Expected #{options_iss}, received #{iss || '<none>'}")
-        end
       end
 
       def verify_jti

@@ -760,6 +760,19 @@ RSpec.describe JWT do
     end
   end
 
+  describe 'issuer claim validation' do
+    let(:token) { JWT.encode(payload, 'secret', 'HS256') }
+    let(:options) { { verify_iss: true, iss: 'expected_iss' } }
+    subject(:decoded_token) { ::JWT.decode(token, 'secret', true, options) }
+
+    context 'when sub does not match' do
+      let(:payload) { { 'iss' => 'not_expected_sub' } }
+      it 'raises InvalidSubError' do
+        expect { decoded_token }.to raise_error(JWT::InvalidIssuerError)
+      end
+    end
+  end
+
   describe '::JWT.decode with x5c parameter' do
     let(:alg) { 'RS256' }
     let(:root_certificates) { [instance_double('OpenSSL::X509::Certificate')] }
