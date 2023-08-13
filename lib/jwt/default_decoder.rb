@@ -85,7 +85,6 @@ module JWT
         verify_algo
         decode_context.validate_signature!
         decode_context.validate!(:claims)
-        verify_claims
       end
 
       [payload, header]
@@ -115,10 +114,6 @@ module JWT
           JWA.create(alg)
         end
       end
-    end
-
-    def verify_claims
-      Validators::ClaimsValidator.verify_claims(payload, @options)
     end
 
     def alg_in_header
