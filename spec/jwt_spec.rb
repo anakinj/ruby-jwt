@@ -765,10 +765,23 @@ RSpec.describe JWT do
     let(:options) { { verify_iss: true, iss: 'expected_iss' } }
     subject(:decoded_token) { ::JWT.decode(token, 'secret', true, options) }
 
-    context 'when sub does not match' do
+    context 'when iss does not match' do
       let(:payload) { { 'iss' => 'not_expected_sub' } }
-      it 'raises InvalidSubError' do
+      it 'raises InvalidIssuerError' do
         expect { decoded_token }.to raise_error(JWT::InvalidIssuerError)
+      end
+    end
+  end
+
+  describe 'jti claim validation' do
+    let(:token) { JWT.encode(payload, 'secret', 'HS256') }
+    let(:options) { { verify_jti: true } }
+    subject(:decoded_token) { ::JWT.decode(token, 'secret', true, options) }
+
+    context 'when jti does not exist' do
+      let(:payload) { {} }
+      it 'raises InvalidJtiError' do
+        expect { decoded_token }.to raise_error(JWT::InvalidJtiError)
       end
     end
   end

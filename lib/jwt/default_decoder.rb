@@ -57,6 +57,10 @@ module JWT
             decode_validators << Validators::IssuerClaimValidator.new(issuers: options[:iss])
           end
 
+          if options[:verify_jti]
+            decode_validators << Validators::JwtIdClaimValidator.new(validator: options[:verify_jti])
+          end
+
           if Array(options[:required_claims]).any?
             decode_validators << Validators::RequiredClaimsValidator.new(required_claims: options[:required_claims])
           end
