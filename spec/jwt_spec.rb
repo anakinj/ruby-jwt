@@ -619,10 +619,9 @@ RSpec.describe JWT do
   end
 
   context 'when the alg value is given as a header parameter' do
-    it 'does not override the actual algorithm used' do
-      pending 'Breaking change in 3.0'
-      headers = JSON.parse(JWT::Base64.url_decode(JWT.encode('Hello World', 'secret', 'HS256', { alg: 'HS123' }).split('.').first))
-      expect(headers['alg']).to eq('HS256')
+    it 'overrides the actual algorithm used' do
+      headers = JSON.parse(Base64.urlsafe_decode64(JWT.encode('Hello World', 'secret', 'HS256', { alg: 'HS123' }).split('.').first))
+      expect(headers['alg']).to eq('HS123')
     end
 
     it 'should generate the same token' do
@@ -698,7 +697,7 @@ RSpec.describe JWT do
   describe 'expiration claim validation' do
     let(:token) { JWT.encode(payload, 'secret', 'HS256') }
     let(:options) { {} }
-    subject(:decoded_token) { ::JWT.decode(token, 'secret', true, options) }
+    subject(:decoded_token) { JWT.decode(token, 'secret', true, options) }
 
     context 'when exp is set in the past' do
       let(:payload) { {  'exp' => (Time.now.to_i - 10) } }
@@ -727,7 +726,7 @@ RSpec.describe JWT do
   describe 'subject claim validation' do
     let(:token) { JWT.encode(payload, 'secret', 'HS256') }
     let(:options) { { verify_sub: true, sub: 'expected_sub' } }
-    subject(:decoded_token) { ::JWT.decode(token, 'secret', true, options) }
+    subject(:decoded_token) { JWT.decode(token, 'secret', true, options) }
 
     context 'when sub does not match' do
       let(:payload) { { 'sub' => 'not_expected_sub' } }
@@ -763,7 +762,7 @@ RSpec.describe JWT do
   describe 'issuer claim validation' do
     let(:token) { JWT.encode(payload, 'secret', 'HS256') }
     let(:options) { { verify_iss: true, iss: 'expected_iss' } }
-    subject(:decoded_token) { ::JWT.decode(token, 'secret', true, options) }
+    subject(:decoded_token) { JWT.decode(token, 'secret', true, options) }
 
     context 'when iss does not match' do
       let(:payload) { { 'iss' => 'not_expected_sub' } }
@@ -776,7 +775,7 @@ RSpec.describe JWT do
   describe 'jti claim validation' do
     let(:token) { JWT.encode(payload, 'secret', 'HS256') }
     let(:options) { { verify_jti: true } }
-    subject(:decoded_token) { ::JWT.decode(token, 'secret', true, options) }
+    subject(:decoded_token) { JWT.decode(token, 'secret', true, options) }
 
     context 'when jti does not exist' do
       let(:payload) { {} }
@@ -796,7 +795,7 @@ RSpec.describe JWT do
       expect(key_finder).to receive(:from).and_return(data[:rsa_public])
     end
 
-    subject(:decoded_token) { ::JWT.decode(data[alg], nil, true, algorithm: alg, x5c: { root_certificates: root_certificates }) }
+    subject(:decoded_token) { JWT.decode(data[alg], nil, true, algorithm: alg, x5c: { root_certificates: root_certificates }) }
 
     it 'calls X5cKeyFinder#from to verify the signature and return the payload' do
       jwt_payload, header = decoded_token
@@ -852,18 +851,10 @@ RSpec.describe JWT do
     end
   end
 
-  describe 'when token signed with nil and decoded with nil' do
-    let(:no_key_token) { JWT.encode(payload, nil, 'HS512') }
-    it 'raises JWT::DecodeError' do
-      pending 'Different behaviour on OpenSSL 3.0 (https://github.com/openssl/openssl/issues/13089)' if JWT.openssl_3_hmac_empty_key_regression?
-      expect { JWT.decode(no_key_token, nil, true, algorithms: 'HS512') }.to raise_error(JWT::DecodeError, 'No verification key available')
-    end
-  end
-
   context 'when token ends with a newline char' do
     let(:token) { "#{JWT.encode(payload, 'secret', 'HS256')}\n" }
-    it 'ignores the newline and decodes the token' do
-      expect(JWT.decode(token, 'secret', true, algorithm: 'HS256')).to include(payload)
+    it 'raises an error' do
+      expect { JWT.decode(token, 'secret', true, algorithm: 'HS256') }.to raise_error(JWT::DecodeError, 'Invalid segment encoding')
     end
   end
 
@@ -871,7 +862,7 @@ RSpec.describe JWT do
     let(:token) { JWT.encode(payload, 'secret', 'HS256') }
 
     it 'starts trying with the algorithm referred in the header' do
-      expect(::JWT::JWA::Rsa).not_to receive(:verify)
+      expect(JWT::JWA::Rsa).not_to receive(:verify)
       JWT.decode(token, 'secret', true, algorithm: ['RS512', 'HS256'])
     end
   end

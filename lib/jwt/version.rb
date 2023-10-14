@@ -22,7 +22,7 @@ module JWT
   def self.openssl_3?
     return false if OpenSSL::OPENSSL_VERSION.include?('LibreSSL')
 
-    true if 3 * 0x10000000 <= OpenSSL::OPENSSL_VERSION_NUMBER
+    3 * 0x10000000 <= OpenSSL::OPENSSL_VERSION_NUMBER
   end
 
   def self.rbnacl?
