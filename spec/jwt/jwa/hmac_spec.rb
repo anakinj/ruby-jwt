@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ::JWT::JWA::Hmac do
+RSpec.describe JWT::JWA::Hmac do
   describe '.sign' do
     subject { described_class.sign('HS256', 'test', hmac_secret) }
 
