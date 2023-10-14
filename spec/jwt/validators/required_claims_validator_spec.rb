@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ::JWT::Validators::RequiredClaimsValidator do
+RSpec.describe JWT::Validators::RequiredClaimsValidator do
   let(:payload) { { 'data' => 'value' } }
 
   subject(:validate!) { described_class.new(required_claims: required_claims).validate!(context: Struct.new(:payload).new(payload)) }

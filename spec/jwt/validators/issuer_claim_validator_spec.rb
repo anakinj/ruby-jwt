@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ::JWT::Validators::IssuerClaimValidator do
+RSpec.describe JWT::Validators::IssuerClaimValidator do
   let(:issuer) { 'ruby-jwt-gem' }
   let(:payload) { { 'iss' => issuer } }
   let(:expected_issuers) { 'ruby-jwt-gem' }

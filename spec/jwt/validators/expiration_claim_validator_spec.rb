@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ::JWT::Validators::ExpirationClaimValidator do
+RSpec.describe JWT::Validators::ExpirationClaimValidator do
   let(:payload) { { 'exp' => (Time.now.to_i + 5) } }
   let(:leeway) { 0 }
 

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ::JWT::Validators::JwtIdClaimValidator do
+RSpec.describe JWT::Validators::JwtIdClaimValidator do
   let(:jti) { 'some-random-uuid-or-whatever' }
   let(:payload) { { 'jti' => jti } }
   let(:validator) { nil }

@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ::JWT::Validators::NotBeforeClaimValidator do
+RSpec.describe JWT::Validators::NotBeforeClaimValidator do
   let(:payload) { { 'nbf' => (Time.now.to_i + 5) } }
 
   describe '#validate!' do

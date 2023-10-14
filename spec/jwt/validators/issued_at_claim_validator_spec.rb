@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-RSpec.describe ::JWT::Validators::IssuedAtClaimValidator do
+RSpec.describe JWT::Validators::IssuedAtClaimValidator do
   let(:payload) { { 'iat' => Time.now.to_f } }
 
   subject(:validate!) { described_class.new.validate!(context: Struct.new(:payload).new(payload)) }

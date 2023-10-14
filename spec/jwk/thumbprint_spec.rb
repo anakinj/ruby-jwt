@@ -3,7 +3,7 @@
 describe JWT::JWK::Thumbprint do
   describe '#to_s' do
     let(:jwk_json) { nil }
-    let(:jwk)      { JWT::JWK.import(::JSON.parse(jwk_json)) }
+    let(:jwk)      { JWT::JWK.import(JSON.parse(jwk_json)) }
 
     subject(:thumbprint) { described_class.new(jwk).to_s }
 

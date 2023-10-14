@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-RSpec.describe ::JWT::DSL do
+RSpec.describe JWT::DSL do
   describe '.sign_and_encode' do
     context 'when algorithm is given as HS256' do
       subject(:defined_obj) do
-        ::JWT.define do
+        JWT.define do
           signing_algorithm 'HS256'
         end
       end
