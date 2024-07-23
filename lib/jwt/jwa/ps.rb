@@ -25,6 +25,8 @@ module JWT
       rescue OpenSSL::PKey::PKeyError
         raise JWT::VerificationError, 'Signature verification raised'
       end
+
+      ::JWT::JWA.register(SUPPORTED, self)
     end
   end
 end

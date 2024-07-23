@@ -3,9 +3,7 @@
 module JWT
   module Algos
     module HmacRbNaClFixed
-      MAPPING   = { 'HS512256' => ::RbNaCl::HMAC::SHA512256 }.freeze
-      SUPPORTED = MAPPING.keys
-
+      MAPPING = { 'HS512256' => ::RbNaCl::HMAC::SHA512256 }.freeze
       class << self
         def sign(algorithm, msg, key)
           key ||= ''
@@ -13,7 +11,7 @@ module JWT
           raise JWT::DecodeError, 'HMAC key expected to be a String' unless key.is_a?(String)
 
           if (hmac = resolve_algorithm(algorithm)) && key.bytesize <= hmac.key_bytes
-            hmac.auth(padded_key_bytes(key, hmac.key_bytes), msg.encode('binary'))
+            hmac.auth(padded_key_bytes(key, ::RbNaCl::HMAC::SHA512256.key_bytes), msg.encode('binary'))
           else
             Hmac.sign(algorithm, msg, key)
           end
@@ -41,6 +39,8 @@ module JWT
           key.bytes.fill(0, key.bytesize...bytesize).pack('C*')
         end
       end
+
+      ::JWT::JWA.register(MAPPING.keys, self)
     end
   end
 end

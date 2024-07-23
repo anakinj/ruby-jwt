@@ -3,25 +3,17 @@
 module JWT
   module Algos
     module HmacRbNaCl
-      MAPPING   = { 'HS512256' => ::RbNaCl::HMAC::SHA512256 }.freeze
-      SUPPORTED = MAPPING.keys
       class << self
         def sign(algorithm, msg, key)
           Deprecations.warning("The use of the algorithm #{algorithm} is deprecated and will be removed in the next major version of ruby-jwt")
-          if (hmac = resolve_algorithm(algorithm))
-            hmac.auth(key_for_rbnacl(hmac, key).encode('binary'), msg.encode('binary'))
-          else
-            Hmac.sign(algorithm, msg, key)
-          end
+
+          ::RbNaCl::HMAC::SHA512256.auth(key_for_rbnacl(::RbNaCl::HMAC::SHA512256, key).encode('binary'), msg.encode('binary'))
         end
 
         def verify(algorithm, key, signing_input, signature)
           Deprecations.warning("The use of the algorithm #{algorithm} is deprecated and will be removed in the next major version of ruby-jwt")
-          if (hmac = resolve_algorithm(algorithm))
-            hmac.verify(key_for_rbnacl(hmac, key).encode('binary'), signature.encode('binary'), signing_input.encode('binary'))
-          else
-            Hmac.verify(algorithm, key, signing_input, signature)
-          end
+
+          ::RbNaCl::HMAC::SHA512256.verify(key_for_rbnacl(::RbNaCl::HMAC::SHA512256, key).encode('binary'), signature.encode('binary'), signing_input.encode('binary'))
         rescue ::RbNaCl::BadAuthenticatorError, ::RbNaCl::LengthError
           false
         end
@@ -37,14 +29,12 @@ module JWT
           key
         end
 
-        def resolve_algorithm(algorithm)
-          MAPPING.fetch(algorithm)
-        end
-
         def padded_empty_key(length)
           Array.new(length, 0x0).pack('C*').encode('binary')
         end
       end
     end
+
+    ::JWT::JWA.register('HS512256', self)
   end
 end

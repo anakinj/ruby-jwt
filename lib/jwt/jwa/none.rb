@@ -14,6 +14,8 @@ module JWT
       def verify(*)
         true
       end
+
+      ::JWT::JWA.register(SUPPORTED, self)
     end
   end
 end

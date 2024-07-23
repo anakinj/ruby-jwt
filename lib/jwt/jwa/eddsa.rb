@@ -37,6 +37,8 @@ module JWT
           raise IncorrectAlgorithm, "Algorithm #{algorithm} not supported. Supported algoritms are #{SUPPORTED.join(', ')}"
         end
       end
+
+      ::JWT::JWA.register(SUPPORTED, self)
     end
   end
 end

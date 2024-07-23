@@ -11,8 +11,6 @@ module JWT
         'HS512' => OpenSSL::Digest::SHA512
       }.freeze
 
-      SUPPORTED = MAPPING.keys
-
       def sign(algorithm, msg, key)
         key ||= ''
 
@@ -30,6 +28,8 @@ module JWT
       def verify(algorithm, key, signing_input, signature)
         SecurityUtils.secure_compare(signature, sign(algorithm, signing_input, key))
       end
+
+      ::JWT::JWA.register(MAPPING.keys, self)
 
       # Copy of https://github.com/rails/rails/blob/v7.0.3.1/activesupport/lib/active_support/security_utils.rb
       # rubocop:disable Naming/MethodParameterName, Style/StringLiterals, Style/NumericPredicate

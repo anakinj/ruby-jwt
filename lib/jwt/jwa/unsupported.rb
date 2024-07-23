@@ -3,16 +3,22 @@
 module JWT
   module JWA
     module Unsupported
-      module_function
+      class << self
+        def valid_alg?(*)
+          false
+        end
 
-      SUPPORTED = [].freeze
+        def alg
+          nil
+        end
 
-      def sign(*)
-        raise NotImplementedError, 'Unsupported signing method'
-      end
+        def sign(*)
+          raise NotImplementedError, 'Unsupported signing method'
+        end
 
-      def verify(*)
-        raise JWT::VerificationError, 'Algorithm not supported'
+        def verify(*)
+          raise JWT::VerificationError, 'Algorithm not supported'
+        end
       end
     end
   end
