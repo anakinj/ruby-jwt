@@ -33,8 +33,8 @@ module JWT
           Array.new(length, 0x0).pack('C*').encode('binary')
         end
       end
-    end
 
-    ::JWT::JWA.register('HS512256', self)
+      ::JWT::JWA.register('HS512256', self)
+    end
   end
 end
