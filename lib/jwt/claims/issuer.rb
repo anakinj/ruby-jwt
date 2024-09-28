@@ -2,7 +2,7 @@
 
 module JWT
   module Claims
-    class Issuer
+    class Issuer # :nodoc:
       def initialize(issuers:)
         @issuers = Array(issuers).map { |item| item.is_a?(Symbol) ? item.to_s : item }
       end

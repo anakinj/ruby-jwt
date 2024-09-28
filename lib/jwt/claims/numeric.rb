@@ -2,41 +2,33 @@
 
 module JWT
   module Claims
-    class Numeric
-      def self.verify!(payload:, **_args)
-        return unless payload.is_a?(Hash)
-
-        new(payload).verify!
-      end
-
+    class Numeric # :nodoc:
       NUMERIC_CLAIMS = %i[
         exp
         iat
         nbf
       ].freeze
 
-      def initialize(payload)
-        @payload = payload.transform_keys(&:to_sym)
-      end
-
-      def verify!
-        validate_numeric_claims
-
-        true
+      def verify!(context:)
+        validate_numeric_claims(context.payload)
       end
 
       private
 
-      def validate_numeric_claims
+      def validate_numeric_claims(payload)
         NUMERIC_CLAIMS.each do |claim|
-          validate_is_numeric(claim) if @payload.key?(claim)
+          validate_is_numeric(payload, claim)
         end
       end
 
-      def validate_is_numeric(claim)
-        return if @payload[claim].is_a?(::Numeric)
+      def validate_is_numeric(payload, claim)
+        return unless payload.is_a?(Hash)
+        return unless payload.key?(claim) ||
+                      payload.key?(claim.to_s)
 
-        raise InvalidPayload, "#{claim} claim must be a Numeric value but it is a #{@payload[claim].class}"
+        return if payload[claim].is_a?(::Numeric) || payload[claim.to_s].is_a?(::Numeric)
+
+        raise InvalidPayload, "#{claim} claim must be a Numeric value but it is a #{(payload[claim] || payload[claim.to_s]).class}"
       end
     end
   end

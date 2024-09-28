@@ -2,7 +2,7 @@
 
 module JWT
   module Claims
-    class Expiration
+    class Expiration # :nodoc:
       def initialize(leeway:)
         @leeway = leeway || 0
       end

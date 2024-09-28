@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
 RSpec.describe JWT::Claims::Numeric do
-  let(:validator) { described_class.new(claims) }
+  let(:validator) { described_class.new }
 
   describe '#verify!' do
-    subject { validator.verify! }
+    subject { validator.verify!(context: SpecSupport::Token.new(payload: claims)) }
 
     shared_examples_for 'a NumericDate claim' do |claim|
       context "when #{claim} payload is an integer" do

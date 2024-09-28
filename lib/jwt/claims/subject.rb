@@ -2,7 +2,7 @@
 
 module JWT
   module Claims
-    class Subject
+    class Subject # :nodoc:
       def initialize(expected_subject:)
         @expected_subject = expected_subject.to_s
       end

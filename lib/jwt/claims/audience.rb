@@ -2,7 +2,7 @@
 
 module JWT
   module Claims
-    class Audience
+    class Audience # :nodoc:
       def initialize(expected_audience:)
         @expected_audience = expected_audience
       end

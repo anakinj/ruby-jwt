@@ -2,7 +2,7 @@
 
 module JWT
   module Claims
-    class JwtId
+    class JwtId # :nodoc:
       def initialize(validator:)
         @validator = validator
       end

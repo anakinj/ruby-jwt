@@ -2,7 +2,7 @@
 
 module JWT
   module Claims
-    class Required
+    class Required # :nodoc:
       def initialize(required_claims:)
         @required_claims = required_claims
       end

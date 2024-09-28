@@ -2,7 +2,7 @@
 
 module JWT
   module Claims
-    class IssuedAt
+    class IssuedAt # :nodoc:
       def verify!(context:, **_args)
         return unless context.payload.is_a?(Hash)
         return unless context.payload.key?('iat')

@@ -2,7 +2,7 @@
 
 module JWT
   module Claims
-    class NotBefore
+    class NotBefore # :nodoc:
       def initialize(leeway:)
         @leeway = leeway || 0
       end
