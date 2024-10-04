@@ -15,6 +15,8 @@ module JWT
   #   token.header # => {"custom"=>"value", "alg"=>"HS256"}
   #
   class Token
+    include Claims
+
     # Initializes a new Token instance.
     #
     # @param header [Hash] the header of the JWT token.
@@ -77,31 +79,6 @@ module JWT
       @jwt ||= (@signature && [encoded_header, encoded_payload, encoded_signature].join('.')) || raise(::JWT::EncodeError, 'Token is not signed')
     end
 
-    # Verifies the claims of the JWT token.
-    #
-    # @param options [Array] the options for verifying the claims.
-    # @return [void]
-    # @raise [JWT::DecodeError] if any claim is invalid.
-    def verify_claims!(*options)
-      Claims.verify!(self, *options)
-    end
-
-    # Checks if the claims of the JWT token are valid.
-    #
-    # @param options [Array] the options for verifying the claims.
-    # @return [Boolean] true if the claims are valid, false otherwise.
-    def valid_claims?(*options)
-      claim_errors(*options).empty?
-    end
-
-    # Returns the errors in the claims of the JWT token.
-    #
-    # @param options [Array] the options for verifying the claims.
-    # @return [Array<JWT::Claims::Error>] the errors in the claims of the JWT token.
-    def claim_errors(*options)
-      Claims.errors(self, *options)
-    end
-
     # Verifies the signature of the JWT token.
     #
     # @param algorithm [String, Array<String>, Object, Array<Object>] the algorithm(s) to use for verification.
@@ -149,6 +126,8 @@ module JWT
   end
 
   class EncodedToken
+    include Claims
+
     attr_reader :jwt
 
     # Initializes a new EncodedToken instance.
@@ -202,31 +181,6 @@ module JWT
     #
     # @return [String] the signing input of the JWT token.
     attr_reader :signing_input
-
-    # Verifies the claims of the JWT token.
-    #
-    # @param options [Array] the options for verifying the claims.
-    # @return [void]
-    # @raise [JWT::DecodeError] if any claim is invalid.
-    def verify_claims!(*options)
-      Claims.verify!(self, *options)
-    end
-
-    # Checks if the claims of the JWT token are valid.
-    #
-    # @param options [Array] the options for verifying the claims.
-    # @return [Boolean] true if the claims are valid, false otherwise.
-    def valid_claims?(*options)
-      claim_errors(*options).empty?
-    end
-
-    # Returns the errors in the claims of the JWT token.
-    #
-    # @param options [Array] the options for verifying the claims.
-    # @return [Array<JWT::Claims::Error>] the errors in the claims of the JWT token.
-    def claim_errors(*options)
-      Claims.errors(self, *options)
-    end
 
     # Verifies the signature of the JWT token.
     #

@@ -27,6 +27,31 @@ module JWT
       numeric: ->(*) { Claims::Numeric.new }
     }.freeze
 
+    # Verifies the claims of the JWT token.
+    #
+    # @param options [Array] the options for verifying the claims.
+    # @return [void]
+    # @raise [JWT::DecodeError] if any claim is invalid.
+    def verify_claims!(*options)
+      Claims.verify!(self, *options)
+    end
+
+    # Checks if the claims of the JWT token are valid.
+    #
+    # @param options [Array] the options for verifying the claims.
+    # @return [Boolean] true if the claims are valid, false otherwise.
+    def valid_claims?(*options)
+      claim_errors(*options).empty?
+    end
+
+    # Returns the errors in the claims of the JWT token.
+    #
+    # @param options [Array] the options for verifying the claims.
+    # @return [Array<JWT::Claims::Error>] the errors in the claims of the JWT token.
+    def claim_errors(*options)
+      Claims.errors(self, *options)
+    end
+
     class << self
       def verify!(token, *options)
         iterate_verifiers(*options) do |verifier, verifier_options|
