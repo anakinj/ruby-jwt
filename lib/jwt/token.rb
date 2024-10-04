@@ -79,18 +79,6 @@ module JWT
       @jwt ||= (@signature && [encoded_header, encoded_payload, encoded_signature].join('.')) || raise(::JWT::EncodeError, 'Token is not signed')
     end
 
-    # Verifies the signature of the JWT token.
-    #
-    # @param algorithm [String, Array<String>, Object, Array<Object>] the algorithm(s) to use for verification.
-    # @param key [String, Array<String>] the key(s) to use for verification.
-    # @return [void]
-    # @raise [JWT::VerificationError] if the signature verification fails.
-    def verify_signature!(algorithm:, key:)
-      return if valid_signature?(algorithm: algorithm, key: key)
-
-      raise JWT::VerificationError, 'Signature verification failed'
-    end
-
     # Checks if the signature of the JWT token is valid.
     #
     # @param algorithm [String, Array<String>, Object, Array<Object>] the algorithm(s) to use for verification.
