@@ -90,7 +90,18 @@
   
 </div>
 
-<h2>Defined Under Namespace</h2>
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>The Configuration module provides methods to configure JWT settings.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><h2>Defined Under Namespace</h2>
 <p class="children">
   
     
@@ -118,7 +129,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#configuration-instance_method" title="#configuration (instance method)">#<strong>configuration</strong>  &#x21d2; Object </a>
+      <a href="#configuration-instance_method" title="#configuration (instance method)">#<strong>configuration</strong>  &#x21d2; JWT::Configuration::Container </a>
     
 
     
@@ -132,7 +143,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Returns the JWT configuration container.</p>
+</div></span>
   
 </li>
 
@@ -140,7 +153,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#configure-instance_method" title="#configure (instance method)">#<strong>configure</strong> {|configuration| ... } &#x21d2; Object </a>
+      <a href="#configure-instance_method" title="#configure (instance method)">#<strong>configure</strong> {|config| ... } &#x21d2; Object </a>
     
 
     
@@ -154,7 +167,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Configures the JWT settings.</p>
+</div></span>
   
 </li>
 
@@ -171,24 +186,53 @@
       <div class="method_details first">
   <h3 class="signature first" id="configuration-instance_method">
   
-    #<strong>configuration</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>configuration</strong>  &#x21d2; <tt><span class='object_link'><a href="Configuration/Container.html" title="JWT::Configuration::Container (class)">JWT::Configuration::Container</a></span></tt> 
   
 
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Returns the JWT configuration container.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Configuration/Container.html" title="JWT::Configuration::Container (class)">JWT::Configuration::Container</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the configuration container.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-11
-12
-13</pre>
+19
+20
+21</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration.rb', line 11</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration.rb', line 19</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_configuration'>configuration</span>
   <span class='ivar'>@configuration</span> <span class='op'>||=</span> <span class='op'>::</span><span class='const'><span class='object_link'><a href="../JWT.html" title="JWT (module)">JWT</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="" title="JWT::Configuration (module)">Configuration</a></span></span><span class='op'>::</span><span class='const'><span class='object_link'><a href="Configuration/Container.html" title="JWT::Configuration::Container (class)">Container</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Configuration/Container.html#initialize-instance_method" title="JWT::Configuration::Container#initialize (method)">new</a></span></span>
@@ -201,7 +245,7 @@
       <div class="method_details ">
   <h3 class="signature " id="configure-instance_method">
   
-    #<strong>configure</strong> {|configuration| ... } &#x21d2; <tt>Object</tt> 
+    #<strong>configure</strong> {|config| ... } &#x21d2; <tt>Object</tt> 
   
 
   
@@ -210,6 +254,8 @@
 </h3><div class="docstring">
   <div class="discussion">
     
+<p>Configures the JWT settings.</p>
+
 
   </div>
 </div>
@@ -221,9 +267,34 @@
     <li>
       
       
-        <span class='type'>(<tt><span class='object_link'><a href="#configuration-instance_method" title="JWT::Configuration#configuration (method)">configuration</a></span></tt>)</span>
+        <span class='type'>(<tt>config</tt>)</span>
       
       
+      
+        &mdash;
+        <div class='inline'>
+<p>Gives the current configuration to the block.</p>
+</div>
+      
+    </li>
+  
+</ul>
+<p class="tag_title">Yield Parameters:</p>
+<ul class="yieldparam">
+  
+    <li>
+      
+        <span class='name'>config</span>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="Configuration/Container.html" title="JWT::Configuration::Container (class)">JWT::Configuration::Container</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the configuration container.</p>
+</div>
       
     </li>
   
@@ -235,12 +306,12 @@
       <pre class="lines">
 
 
-7
-8
-9</pre>
+12
+13
+14</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration.rb', line 7</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration.rb', line 12</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_configure'>configure</span>
   <span class='kw'>yield</span><span class='lparen'>(</span><span class='id identifier rubyid_configuration'>configuration</span><span class='rparen'>)</span>
@@ -255,7 +326,7 @@
 </div>
 
       <div id="footer">
-  Generated on Sat Oct  5 18:06:40 2024 by
+  Generated on Sat Oct  5 21:04:55 2024 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.37 (ruby-3.3.5).
 </div>

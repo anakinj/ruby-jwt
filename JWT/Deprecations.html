@@ -338,7 +338,7 @@
 
 <span class='kw'>def</span> <span class='id identifier rubyid_warning'>warning</span><span class='lparen'>(</span><span class='id identifier rubyid_message'>message</span><span class='comma'>,</span> <span class='label'>only_if_valid:</span> <span class='kw'>false</span><span class='rparen'>)</span>
   <span class='id identifier rubyid_method_name'>method_name</span> <span class='op'>=</span> <span class='id identifier rubyid_only_if_valid'>only_if_valid</span> <span class='op'>?</span> <span class='symbol'>:store</span> <span class='op'>:</span> <span class='symbol'>:warn</span>
-  <span class='kw'>case</span> <span class='const'><span class='object_link'><a href="../JWT.html" title="JWT (module)">JWT</a></span></span><span class='period'>.</span><span class='id identifier rubyid_configuration'><span class='object_link'><a href="Configuration.html#configuration-instance_method" title="JWT::Configuration#configuration (method)">configuration</a></span></span><span class='period'>.</span><span class='id identifier rubyid_deprecation_warnings'>deprecation_warnings</span>
+  <span class='kw'>case</span> <span class='const'><span class='object_link'><a href="../JWT.html" title="JWT (module)">JWT</a></span></span><span class='period'>.</span><span class='id identifier rubyid_configuration'><span class='object_link'><a href="Configuration.html#configuration-instance_method" title="JWT::Configuration#configuration (method)">configuration</a></span></span><span class='period'>.</span><span class='id identifier rubyid_deprecation_warnings'><span class='object_link'><a href="Configuration/Container.html#deprecation_warnings-instance_method" title="JWT::Configuration::Container#deprecation_warnings (method)">deprecation_warnings</a></span></span>
   <span class='kw'>when</span> <span class='symbol'>:once</span>
     <span class='kw'>return</span> <span class='kw'>if</span> <span class='id identifier rubyid_record_warned'>record_warned</span><span class='lparen'>(</span><span class='id identifier rubyid_message'>message</span><span class='rparen'>)</span>
   <span class='kw'>when</span> <span class='symbol'>:warn</span>
@@ -359,7 +359,7 @@
 </div>
 
       <div id="footer">
-  Generated on Sat Oct  5 18:06:40 2024 by
+  Generated on Sat Oct  5 21:04:55 2024 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.37 (ruby-3.3.5).
 </div>

@@ -99,23 +99,18 @@
   
 </div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>The Container class holds the configuration settings for JWT.</p>
 
-  
-    <h2>
-      Constant Summary
-      <small><a href="#" class="constants_summary_toggle">collapse</a></small>
-    </h2>
 
-    <dl class="constants">
-      
-        <dt id="DEPRECATION_WARNINGS_VALUES-constant" class="">DEPRECATION_WARNINGS_VALUES =
-          
-        </dt>
-        <dd><pre class="code"><span class='qsymbols_beg'>%i[</span><span class='tstring_content'>once</span><span class='words_sep'> </span><span class='tstring_content'>warn</span><span class='words_sep'> </span><span class='tstring_content'>silent</span><span class='tstring_end'>]</span></span><span class='period'>.</span><span class='id identifier rubyid_freeze'>freeze</span></pre></dd>
-      
-    </dl>
+  </div>
+</div>
+<div class="tags">
   
 
+</div>
 
 
 
@@ -125,7 +120,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#decode-instance_method" title="#decode (instance method)">#<strong>decode</strong>  &#x21d2; Object </a>
+      <a href="#decode-instance_method" title="#decode (instance method)">#<strong>decode</strong>  &#x21d2; DecodeConfiguration </a>
     
 
     
@@ -143,7 +138,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute decode.</p>
+<p>The decode configuration.</p>
 </div></span>
   
 </li>
@@ -179,7 +174,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#jwk-instance_method" title="#jwk (instance method)">#<strong>jwk</strong>  &#x21d2; Object </a>
+      <a href="#jwk-instance_method" title="#jwk (instance method)">#<strong>jwk</strong>  &#x21d2; JwkConfiguration </a>
     
 
     
@@ -197,7 +192,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute jwk.</p>
+<p>The JWK configuration.</p>
 </div></span>
   
 </li>
@@ -206,7 +201,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#strict_base64_decoding-instance_method" title="#strict_base64_decoding (instance method)">#<strong>strict_base64_decoding</strong>  &#x21d2; Object </a>
+      <a href="#strict_base64_decoding-instance_method" title="#strict_base64_decoding (instance method)">#<strong>strict_base64_decoding</strong>  &#x21d2; Boolean </a>
     
 
     
@@ -224,7 +219,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute strict_base64_decoding.</p>
+<p>Whether strict Base64 decoding is enabled.</p>
 </div></span>
   
 </li>
@@ -263,7 +258,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>A new instance of Container.</p>
+<p>Initializes a new Container instance and resets the configuration.</p>
 </div></span>
   
 </li>
@@ -272,7 +267,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#reset!-instance_method" title="#reset! (instance method)">#<strong>reset!</strong>  &#x21d2; Object </a>
+      <a href="#reset!-instance_method" title="#reset! (instance method)">#<strong>reset!</strong>  &#x21d2; void </a>
     
 
     
@@ -286,7 +281,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Resets the configuration to default values.</p>
+</div></span>
   
 </li>
 
@@ -309,7 +306,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns a new instance of Container.</p>
+<p>Initializes a new Container instance and resets the configuration.</p>
 
 
   </div>
@@ -323,12 +320,12 @@
       <pre class="lines">
 
 
-12
-13
-14</pre>
+23
+24
+25</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/container.rb', line 12</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/container.rb', line 23</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span>
   <span class='id identifier rubyid_reset!'>reset!</span>
@@ -348,7 +345,7 @@
       <div class="method_details first">
   <h3 class="signature first" id="decode-instance_method">
   
-    #<strong>decode</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>decode</strong>  &#x21d2; <tt><span class='object_link'><a href="DecodeConfiguration.html" title="JWT::Configuration::DecodeConfiguration (class)">DecodeConfiguration</a></span></tt> 
   
 
   
@@ -357,13 +354,31 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute decode.</p>
+<p>Returns the decode configuration.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="DecodeConfiguration.html" title="JWT::Configuration::DecodeConfiguration (class)">DecodeConfiguration</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the decode configuration.</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -371,12 +386,12 @@
       <pre class="lines">
 
 
-9
-10
-11</pre>
+16
+17
+18</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/container.rb', line 9</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/container.rb', line 16</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_decode'>decode</span>
   <span class='ivar'>@decode</span>
@@ -414,12 +429,12 @@
       <pre class="lines">
 
 
-10
-11
-12</pre>
+20
+21
+22</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/container.rb', line 10</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/container.rb', line 20</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_deprecation_warnings'>deprecation_warnings</span>
   <span class='ivar'>@deprecation_warnings</span>
@@ -434,7 +449,7 @@
       <div class="method_details ">
   <h3 class="signature " id="jwk-instance_method">
   
-    #<strong>jwk</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>jwk</strong>  &#x21d2; <tt><span class='object_link'><a href="JwkConfiguration.html" title="JWT::Configuration::JwkConfiguration (class)">JwkConfiguration</a></span></tt> 
   
 
   
@@ -443,13 +458,31 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute jwk.</p>
+<p>Returns the JWK configuration.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt><span class='object_link'><a href="JwkConfiguration.html" title="JWT::Configuration::JwkConfiguration (class)">JwkConfiguration</a></span></tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the JWK configuration.</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -457,16 +490,12 @@
       <pre class="lines">
 
 
-9
-10
-11</pre>
+16</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/container.rb', line 9</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/container.rb', line 16</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_jwk'>jwk</span>
-  <span class='ivar'>@jwk</span>
-<span class='kw'>end</span></pre>
+<span class='id identifier rubyid_attr_accessor'>attr_accessor</span> <span class='symbol'>:decode</span><span class='comma'>,</span> <span class='symbol'>:jwk</span><span class='comma'>,</span> <span class='symbol'>:strict_base64_decoding</span></pre>
     </td>
   </tr>
 </table>
@@ -477,7 +506,7 @@
       <div class="method_details ">
   <h3 class="signature " id="strict_base64_decoding-instance_method">
   
-    #<strong>strict_base64_decoding</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>strict_base64_decoding</strong>  &#x21d2; <tt>Boolean</tt> 
   
 
   
@@ -486,13 +515,31 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute strict_base64_decoding.</p>
+<p>Returns whether strict Base64 decoding is enabled.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether strict Base64 decoding is enabled.</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -500,16 +547,12 @@
       <pre class="lines">
 
 
-9
-10
-11</pre>
+16</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/container.rb', line 9</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/container.rb', line 16</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_strict_base64_decoding'>strict_base64_decoding</span>
-  <span class='ivar'>@strict_base64_decoding</span>
-<span class='kw'>end</span></pre>
+<span class='id identifier rubyid_attr_accessor'>attr_accessor</span> <span class='symbol'>:decode</span><span class='comma'>,</span> <span class='symbol'>:jwk</span><span class='comma'>,</span> <span class='symbol'>:strict_base64_decoding</span></pre>
     </td>
   </tr>
 </table>
@@ -525,28 +568,39 @@
       <div class="method_details first">
   <h3 class="signature first" id="reset!-instance_method">
   
-    #<strong>reset!</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>reset!</strong>  &#x21d2; <tt>void</tt> 
   
 
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note returns_void">This method returns an undefined value.</p>
+<p>Resets the configuration to default values.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-16
-17
-18
-19
-20
-21
-22</pre>
+30
+31
+32
+33
+34
+35
+36</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/container.rb', line 16</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/container.rb', line 30</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_reset!'>reset!</span>
   <span class='ivar'>@decode</span>                 <span class='op'>=</span> <span class='const'><span class='object_link'><a href="DecodeConfiguration.html" title="JWT::Configuration::DecodeConfiguration (class)">DecodeConfiguration</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="DecodeConfiguration.html#initialize-instance_method" title="JWT::Configuration::DecodeConfiguration#initialize (method)">new</a></span></span>
@@ -565,7 +619,7 @@
 </div>
 
       <div id="footer">
-  Generated on Sat Oct  5 18:06:41 2024 by
+  Generated on Sat Oct  5 21:04:56 2024 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.37 (ruby-3.3.5).
 </div>

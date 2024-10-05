@@ -366,7 +366,7 @@
 </span>  <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:kid_generator</span><span class='rbracket'>]</span> <span class='op'>||=</span> <span class='ivar'>@parameters</span><span class='period'>.</span><span class='id identifier rubyid_delete'>delete</span><span class='lparen'>(</span><span class='symbol'>:kid_generator</span><span class='rparen'>)</span>
 
   <span class='comment'># Make sure the key has a kid
-</span>  <span class='id identifier rubyid_kid_generator'>kid_generator</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:kid_generator</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='op'>::</span><span class='const'><span class='object_link'><a href="../../JWT.html" title="JWT (module)">JWT</a></span></span><span class='period'>.</span><span class='id identifier rubyid_configuration'><span class='object_link'><a href="../Configuration.html#configuration-instance_method" title="JWT::Configuration#configuration (method)">configuration</a></span></span><span class='period'>.</span><span class='id identifier rubyid_jwk'>jwk</span><span class='period'>.</span><span class='id identifier rubyid_kid_generator'>kid_generator</span>
+</span>  <span class='id identifier rubyid_kid_generator'>kid_generator</span> <span class='op'>=</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:kid_generator</span><span class='rbracket'>]</span> <span class='op'>||</span> <span class='op'>::</span><span class='const'><span class='object_link'><a href="../../JWT.html" title="JWT (module)">JWT</a></span></span><span class='period'>.</span><span class='id identifier rubyid_configuration'><span class='object_link'><a href="../Configuration.html#configuration-instance_method" title="JWT::Configuration#configuration (method)">configuration</a></span></span><span class='period'>.</span><span class='id identifier rubyid_jwk'><span class='object_link'><a href="../Configuration/Container.html#jwk-instance_method" title="JWT::Configuration::Container#jwk (method)">jwk</a></span></span><span class='period'>.</span><span class='id identifier rubyid_kid_generator'><span class='object_link'><a href="../Configuration/JwkConfiguration.html#kid_generator-instance_method" title="JWT::Configuration::JwkConfiguration#kid_generator (method)">kid_generator</a></span></span>
   <span class='kw'>self</span><span class='lbracket'>[</span><span class='symbol'>:kid</span><span class='rbracket'>]</span> <span class='op'>||=</span> <span class='id identifier rubyid_kid_generator'>kid_generator</span><span class='period'>.</span><span class='id identifier rubyid_new'>new</span><span class='lparen'>(</span><span class='kw'>self</span><span class='rparen'>)</span><span class='period'>.</span><span class='id identifier rubyid_generate'>generate</span>
 <span class='kw'>end</span></pre>
     </td>
@@ -612,7 +612,7 @@
 </div>
 
       <div id="footer">
-  Generated on Sat Oct  5 18:06:40 2024 by
+  Generated on Sat Oct  5 21:04:55 2024 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.37 (ruby-3.3.5).
 </div>

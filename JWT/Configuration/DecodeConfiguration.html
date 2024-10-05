@@ -99,7 +99,18 @@
   
 </div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>The DecodeConfiguration class holds the configuration settings for decoding JWT tokens.</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
 
 
@@ -109,7 +120,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#algorithms-instance_method" title="#algorithms (instance method)">#<strong>algorithms</strong>  &#x21d2; Object </a>
+      <a href="#algorithms-instance_method" title="#algorithms (instance method)">#<strong>algorithms</strong>  &#x21d2; Array&lt;String&gt; </a>
     
 
     
@@ -127,7 +138,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute algorithms.</p>
+<p>The list of acceptable algorithms.</p>
 </div></span>
   
 </li>
@@ -136,7 +147,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#leeway-instance_method" title="#leeway (instance method)">#<strong>leeway</strong>  &#x21d2; Object </a>
+      <a href="#leeway-instance_method" title="#leeway (instance method)">#<strong>leeway</strong>  &#x21d2; Integer </a>
     
 
     
@@ -154,7 +165,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute leeway.</p>
+<p>The leeway in seconds for time-based claims.</p>
 </div></span>
   
 </li>
@@ -163,7 +174,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#required_claims-instance_method" title="#required_claims (instance method)">#<strong>required_claims</strong>  &#x21d2; Object </a>
+      <a href="#required_claims-instance_method" title="#required_claims (instance method)">#<strong>required_claims</strong>  &#x21d2; Array&lt;String&gt; </a>
     
 
     
@@ -181,7 +192,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute required_claims.</p>
+<p>The list of required claims.</p>
 </div></span>
   
 </li>
@@ -190,7 +201,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#verify_aud-instance_method" title="#verify_aud (instance method)">#<strong>verify_aud</strong>  &#x21d2; Object </a>
+      <a href="#verify_aud-instance_method" title="#verify_aud (instance method)">#<strong>verify_aud</strong>  &#x21d2; Boolean </a>
     
 
     
@@ -208,7 +219,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute verify_aud.</p>
+<p>Whether to verify the audience claim.</p>
 </div></span>
   
 </li>
@@ -217,7 +228,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#verify_expiration-instance_method" title="#verify_expiration (instance method)">#<strong>verify_expiration</strong>  &#x21d2; Object </a>
+      <a href="#verify_expiration-instance_method" title="#verify_expiration (instance method)">#<strong>verify_expiration</strong>  &#x21d2; Boolean </a>
     
 
     
@@ -235,7 +246,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute verify_expiration.</p>
+<p>Whether to verify the expiration claim.</p>
 </div></span>
   
 </li>
@@ -244,7 +255,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#verify_iat-instance_method" title="#verify_iat (instance method)">#<strong>verify_iat</strong>  &#x21d2; Object </a>
+      <a href="#verify_iat-instance_method" title="#verify_iat (instance method)">#<strong>verify_iat</strong>  &#x21d2; Boolean </a>
     
 
     
@@ -262,7 +273,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute verify_iat.</p>
+<p>Whether to verify the issued at claim.</p>
 </div></span>
   
 </li>
@@ -271,7 +282,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#verify_iss-instance_method" title="#verify_iss (instance method)">#<strong>verify_iss</strong>  &#x21d2; Object </a>
+      <a href="#verify_iss-instance_method" title="#verify_iss (instance method)">#<strong>verify_iss</strong>  &#x21d2; Boolean </a>
     
 
     
@@ -289,7 +300,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute verify_iss.</p>
+<p>Whether to verify the issuer claim.</p>
 </div></span>
   
 </li>
@@ -298,7 +309,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#verify_jti-instance_method" title="#verify_jti (instance method)">#<strong>verify_jti</strong>  &#x21d2; Object </a>
+      <a href="#verify_jti-instance_method" title="#verify_jti (instance method)">#<strong>verify_jti</strong>  &#x21d2; Boolean </a>
     
 
     
@@ -316,7 +327,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute verify_jti.</p>
+<p>Whether to verify the JWT ID claim.</p>
 </div></span>
   
 </li>
@@ -325,7 +336,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#verify_not_before-instance_method" title="#verify_not_before (instance method)">#<strong>verify_not_before</strong>  &#x21d2; Object </a>
+      <a href="#verify_not_before-instance_method" title="#verify_not_before (instance method)">#<strong>verify_not_before</strong>  &#x21d2; Boolean </a>
     
 
     
@@ -343,7 +354,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute verify_not_before.</p>
+<p>Whether to verify the not before claim.</p>
 </div></span>
   
 </li>
@@ -352,7 +363,7 @@
       <li class="public ">
   <span class="summary_signature">
     
-      <a href="#verify_sub-instance_method" title="#verify_sub (instance method)">#<strong>verify_sub</strong>  &#x21d2; Object </a>
+      <a href="#verify_sub-instance_method" title="#verify_sub (instance method)">#<strong>verify_sub</strong>  &#x21d2; Boolean </a>
     
 
     
@@ -370,7 +381,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>Returns the value of attribute verify_sub.</p>
+<p>Whether to verify the subject claim.</p>
 </div></span>
   
 </li>
@@ -409,7 +420,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>A new instance of DecodeConfiguration.</p>
+<p>Initializes a new DecodeConfiguration instance with default settings.</p>
 </div></span>
   
 </li>
@@ -429,7 +440,7 @@
   
   
   
-  
+  <span class="private note title">private</span>
 
   
     <span class="summary_desc"><div class='inline'></div></span>
@@ -455,7 +466,7 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns a new instance of DecodeConfiguration.</p>
+<p>Initializes a new DecodeConfiguration instance with default settings.</p>
 
 
   </div>
@@ -469,21 +480,21 @@
       <pre class="lines">
 
 
-17
-18
-19
-20
-21
-22
-23
-24
-25
-26
-27
-28</pre>
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 17</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 40</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span>
   <span class='ivar'>@verify_expiration</span> <span class='op'>=</span> <span class='kw'>true</span>
@@ -512,7 +523,7 @@
       <div class="method_details first">
   <h3 class="signature first" id="algorithms-instance_method">
   
-    #<strong>algorithms</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>algorithms</strong>  &#x21d2; <tt>Array&lt;String&gt;</tt> 
   
 
   
@@ -521,13 +532,31 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute algorithms.</p>
+<p>Returns the list of acceptable algorithms.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;String&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the list of acceptable algorithms.</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -535,16 +564,30 @@
       <pre class="lines">
 
 
-6
-7
-8</pre>
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 28</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_algorithms'>algorithms</span>
-  <span class='ivar'>@algorithms</span>
-<span class='kw'>end</span></pre>
+<span class='id identifier rubyid_attr_accessor'>attr_accessor</span> <span class='symbol'>:verify_expiration</span><span class='comma'>,</span>
+<span class='symbol'>:verify_not_before</span><span class='comma'>,</span>
+<span class='symbol'>:verify_iss</span><span class='comma'>,</span>
+<span class='symbol'>:verify_iat</span><span class='comma'>,</span>
+<span class='symbol'>:verify_jti</span><span class='comma'>,</span>
+<span class='symbol'>:verify_aud</span><span class='comma'>,</span>
+<span class='symbol'>:verify_sub</span><span class='comma'>,</span>
+<span class='symbol'>:leeway</span><span class='comma'>,</span>
+<span class='symbol'>:algorithms</span><span class='comma'>,</span>
+<span class='symbol'>:required_claims</span></pre>
     </td>
   </tr>
 </table>
@@ -555,7 +598,7 @@
       <div class="method_details ">
   <h3 class="signature " id="leeway-instance_method">
   
-    #<strong>leeway</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>leeway</strong>  &#x21d2; <tt>Integer</tt> 
   
 
   
@@ -564,13 +607,31 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute leeway.</p>
+<p>Returns the leeway in seconds for time-based claims.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Integer</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the leeway in seconds for time-based claims.</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -578,16 +639,30 @@
       <pre class="lines">
 
 
-6
-7
-8</pre>
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 28</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_leeway'>leeway</span>
-  <span class='ivar'>@leeway</span>
-<span class='kw'>end</span></pre>
+<span class='id identifier rubyid_attr_accessor'>attr_accessor</span> <span class='symbol'>:verify_expiration</span><span class='comma'>,</span>
+<span class='symbol'>:verify_not_before</span><span class='comma'>,</span>
+<span class='symbol'>:verify_iss</span><span class='comma'>,</span>
+<span class='symbol'>:verify_iat</span><span class='comma'>,</span>
+<span class='symbol'>:verify_jti</span><span class='comma'>,</span>
+<span class='symbol'>:verify_aud</span><span class='comma'>,</span>
+<span class='symbol'>:verify_sub</span><span class='comma'>,</span>
+<span class='symbol'>:leeway</span><span class='comma'>,</span>
+<span class='symbol'>:algorithms</span><span class='comma'>,</span>
+<span class='symbol'>:required_claims</span></pre>
     </td>
   </tr>
 </table>
@@ -598,7 +673,7 @@
       <div class="method_details ">
   <h3 class="signature " id="required_claims-instance_method">
   
-    #<strong>required_claims</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>required_claims</strong>  &#x21d2; <tt>Array&lt;String&gt;</tt> 
   
 
   
@@ -607,13 +682,31 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute required_claims.</p>
+<p>Returns the list of required claims.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Array&lt;String&gt;</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the list of required claims.</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -621,16 +714,30 @@
       <pre class="lines">
 
 
-6
-7
-8</pre>
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 28</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_required_claims'>required_claims</span>
-  <span class='ivar'>@required_claims</span>
-<span class='kw'>end</span></pre>
+<span class='id identifier rubyid_attr_accessor'>attr_accessor</span> <span class='symbol'>:verify_expiration</span><span class='comma'>,</span>
+<span class='symbol'>:verify_not_before</span><span class='comma'>,</span>
+<span class='symbol'>:verify_iss</span><span class='comma'>,</span>
+<span class='symbol'>:verify_iat</span><span class='comma'>,</span>
+<span class='symbol'>:verify_jti</span><span class='comma'>,</span>
+<span class='symbol'>:verify_aud</span><span class='comma'>,</span>
+<span class='symbol'>:verify_sub</span><span class='comma'>,</span>
+<span class='symbol'>:leeway</span><span class='comma'>,</span>
+<span class='symbol'>:algorithms</span><span class='comma'>,</span>
+<span class='symbol'>:required_claims</span></pre>
     </td>
   </tr>
 </table>
@@ -641,7 +748,7 @@
       <div class="method_details ">
   <h3 class="signature " id="verify_aud-instance_method">
   
-    #<strong>verify_aud</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>verify_aud</strong>  &#x21d2; <tt>Boolean</tt> 
   
 
   
@@ -650,13 +757,31 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute verify_aud.</p>
+<p>Returns whether to verify the audience claim.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether to verify the audience claim.</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -664,16 +789,30 @@
       <pre class="lines">
 
 
-6
-7
-8</pre>
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 28</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_verify_aud'>verify_aud</span>
-  <span class='ivar'>@verify_aud</span>
-<span class='kw'>end</span></pre>
+<span class='id identifier rubyid_attr_accessor'>attr_accessor</span> <span class='symbol'>:verify_expiration</span><span class='comma'>,</span>
+<span class='symbol'>:verify_not_before</span><span class='comma'>,</span>
+<span class='symbol'>:verify_iss</span><span class='comma'>,</span>
+<span class='symbol'>:verify_iat</span><span class='comma'>,</span>
+<span class='symbol'>:verify_jti</span><span class='comma'>,</span>
+<span class='symbol'>:verify_aud</span><span class='comma'>,</span>
+<span class='symbol'>:verify_sub</span><span class='comma'>,</span>
+<span class='symbol'>:leeway</span><span class='comma'>,</span>
+<span class='symbol'>:algorithms</span><span class='comma'>,</span>
+<span class='symbol'>:required_claims</span></pre>
     </td>
   </tr>
 </table>
@@ -684,7 +823,7 @@
       <div class="method_details ">
   <h3 class="signature " id="verify_expiration-instance_method">
   
-    #<strong>verify_expiration</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>verify_expiration</strong>  &#x21d2; <tt>Boolean</tt> 
   
 
   
@@ -693,13 +832,31 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute verify_expiration.</p>
+<p>Returns whether to verify the expiration claim.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether to verify the expiration claim.</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -707,12 +864,12 @@
       <pre class="lines">
 
 
-6
-7
-8</pre>
+28
+29
+30</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 28</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_verify_expiration'>verify_expiration</span>
   <span class='ivar'>@verify_expiration</span>
@@ -727,7 +884,7 @@
       <div class="method_details ">
   <h3 class="signature " id="verify_iat-instance_method">
   
-    #<strong>verify_iat</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>verify_iat</strong>  &#x21d2; <tt>Boolean</tt> 
   
 
   
@@ -736,13 +893,31 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute verify_iat.</p>
+<p>Returns whether to verify the issued at claim.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether to verify the issued at claim.</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -750,16 +925,30 @@
       <pre class="lines">
 
 
-6
-7
-8</pre>
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 28</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_verify_iat'>verify_iat</span>
-  <span class='ivar'>@verify_iat</span>
-<span class='kw'>end</span></pre>
+<span class='id identifier rubyid_attr_accessor'>attr_accessor</span> <span class='symbol'>:verify_expiration</span><span class='comma'>,</span>
+<span class='symbol'>:verify_not_before</span><span class='comma'>,</span>
+<span class='symbol'>:verify_iss</span><span class='comma'>,</span>
+<span class='symbol'>:verify_iat</span><span class='comma'>,</span>
+<span class='symbol'>:verify_jti</span><span class='comma'>,</span>
+<span class='symbol'>:verify_aud</span><span class='comma'>,</span>
+<span class='symbol'>:verify_sub</span><span class='comma'>,</span>
+<span class='symbol'>:leeway</span><span class='comma'>,</span>
+<span class='symbol'>:algorithms</span><span class='comma'>,</span>
+<span class='symbol'>:required_claims</span></pre>
     </td>
   </tr>
 </table>
@@ -770,7 +959,7 @@
       <div class="method_details ">
   <h3 class="signature " id="verify_iss-instance_method">
   
-    #<strong>verify_iss</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>verify_iss</strong>  &#x21d2; <tt>Boolean</tt> 
   
 
   
@@ -779,13 +968,31 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute verify_iss.</p>
+<p>Returns whether to verify the issuer claim.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether to verify the issuer claim.</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -793,16 +1000,30 @@
       <pre class="lines">
 
 
-6
-7
-8</pre>
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 28</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_verify_iss'>verify_iss</span>
-  <span class='ivar'>@verify_iss</span>
-<span class='kw'>end</span></pre>
+<span class='id identifier rubyid_attr_accessor'>attr_accessor</span> <span class='symbol'>:verify_expiration</span><span class='comma'>,</span>
+<span class='symbol'>:verify_not_before</span><span class='comma'>,</span>
+<span class='symbol'>:verify_iss</span><span class='comma'>,</span>
+<span class='symbol'>:verify_iat</span><span class='comma'>,</span>
+<span class='symbol'>:verify_jti</span><span class='comma'>,</span>
+<span class='symbol'>:verify_aud</span><span class='comma'>,</span>
+<span class='symbol'>:verify_sub</span><span class='comma'>,</span>
+<span class='symbol'>:leeway</span><span class='comma'>,</span>
+<span class='symbol'>:algorithms</span><span class='comma'>,</span>
+<span class='symbol'>:required_claims</span></pre>
     </td>
   </tr>
 </table>
@@ -813,7 +1034,7 @@
       <div class="method_details ">
   <h3 class="signature " id="verify_jti-instance_method">
   
-    #<strong>verify_jti</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>verify_jti</strong>  &#x21d2; <tt>Boolean</tt> 
   
 
   
@@ -822,13 +1043,31 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute verify_jti.</p>
+<p>Returns whether to verify the JWT ID claim.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether to verify the JWT ID claim.</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -836,16 +1075,30 @@
       <pre class="lines">
 
 
-6
-7
-8</pre>
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 28</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_verify_jti'>verify_jti</span>
-  <span class='ivar'>@verify_jti</span>
-<span class='kw'>end</span></pre>
+<span class='id identifier rubyid_attr_accessor'>attr_accessor</span> <span class='symbol'>:verify_expiration</span><span class='comma'>,</span>
+<span class='symbol'>:verify_not_before</span><span class='comma'>,</span>
+<span class='symbol'>:verify_iss</span><span class='comma'>,</span>
+<span class='symbol'>:verify_iat</span><span class='comma'>,</span>
+<span class='symbol'>:verify_jti</span><span class='comma'>,</span>
+<span class='symbol'>:verify_aud</span><span class='comma'>,</span>
+<span class='symbol'>:verify_sub</span><span class='comma'>,</span>
+<span class='symbol'>:leeway</span><span class='comma'>,</span>
+<span class='symbol'>:algorithms</span><span class='comma'>,</span>
+<span class='symbol'>:required_claims</span></pre>
     </td>
   </tr>
 </table>
@@ -856,7 +1109,7 @@
       <div class="method_details ">
   <h3 class="signature " id="verify_not_before-instance_method">
   
-    #<strong>verify_not_before</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>verify_not_before</strong>  &#x21d2; <tt>Boolean</tt> 
   
 
   
@@ -865,13 +1118,31 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute verify_not_before.</p>
+<p>Returns whether to verify the not before claim.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether to verify the not before claim.</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -879,16 +1150,30 @@
       <pre class="lines">
 
 
-6
-7
-8</pre>
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 28</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_verify_not_before'>verify_not_before</span>
-  <span class='ivar'>@verify_not_before</span>
-<span class='kw'>end</span></pre>
+<span class='id identifier rubyid_attr_accessor'>attr_accessor</span> <span class='symbol'>:verify_expiration</span><span class='comma'>,</span>
+<span class='symbol'>:verify_not_before</span><span class='comma'>,</span>
+<span class='symbol'>:verify_iss</span><span class='comma'>,</span>
+<span class='symbol'>:verify_iat</span><span class='comma'>,</span>
+<span class='symbol'>:verify_jti</span><span class='comma'>,</span>
+<span class='symbol'>:verify_aud</span><span class='comma'>,</span>
+<span class='symbol'>:verify_sub</span><span class='comma'>,</span>
+<span class='symbol'>:leeway</span><span class='comma'>,</span>
+<span class='symbol'>:algorithms</span><span class='comma'>,</span>
+<span class='symbol'>:required_claims</span></pre>
     </td>
   </tr>
 </table>
@@ -899,7 +1184,7 @@
       <div class="method_details ">
   <h3 class="signature " id="verify_sub-instance_method">
   
-    #<strong>verify_sub</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>verify_sub</strong>  &#x21d2; <tt>Boolean</tt> 
   
 
   
@@ -908,13 +1193,31 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns the value of attribute verify_sub.</p>
+<p>Returns whether to verify the subject claim.</p>
 
 
   </div>
 </div>
 <div class="tags">
   
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>Boolean</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>whether to verify the subject claim.</p>
+</div>
+      
+    </li>
+  
+</ul>
 
 </div><table class="source_code">
   <tr>
@@ -922,16 +1225,30 @@
       <pre class="lines">
 
 
-6
-7
-8</pre>
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 6</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 28</span>
 
-<span class='kw'>def</span> <span class='id identifier rubyid_verify_sub'>verify_sub</span>
-  <span class='ivar'>@verify_sub</span>
-<span class='kw'>end</span></pre>
+<span class='id identifier rubyid_attr_accessor'>attr_accessor</span> <span class='symbol'>:verify_expiration</span><span class='comma'>,</span>
+<span class='symbol'>:verify_not_before</span><span class='comma'>,</span>
+<span class='symbol'>:verify_iss</span><span class='comma'>,</span>
+<span class='symbol'>:verify_iat</span><span class='comma'>,</span>
+<span class='symbol'>:verify_jti</span><span class='comma'>,</span>
+<span class='symbol'>:verify_aud</span><span class='comma'>,</span>
+<span class='symbol'>:verify_sub</span><span class='comma'>,</span>
+<span class='symbol'>:leeway</span><span class='comma'>,</span>
+<span class='symbol'>:algorithms</span><span class='comma'>,</span>
+<span class='symbol'>:required_claims</span></pre>
     </td>
   </tr>
 </table>
@@ -953,29 +1270,42 @@
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    <p class="note private">
+  <strong>This method is part of a private API.</strong>
+  You should avoid using this method if possible, as it may be removed or be changed in the future.
+</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-30
-31
-32
-33
-34
-35
-36
-37
-38
-39
-40
-41
-42
-43</pre>
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 30</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/configuration/decode_configuration.rb', line 54</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_to_h'>to_h</span>
   <span class='lbrace'>{</span>
@@ -1001,7 +1331,7 @@
 </div>
 
       <div id="footer">
-  Generated on Sat Oct  5 18:06:41 2024 by
+  Generated on Sat Oct  5 21:04:56 2024 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.37 (ruby-3.3.5).
 </div>

@@ -99,7 +99,18 @@
   
 </div>
 
+<h2>Overview</h2><div class="docstring">
+  <div class="discussion">
+    
+<p>The Encode class is responsible for encoding JWT tokens.</p>
 
+
+  </div>
+</div>
+<div class="tags">
+  
+
+</div>
 
 
 
@@ -134,7 +145,7 @@
 
   
     <span class="summary_desc"><div class='inline'>
-<p>A new instance of Encode.</p>
+<p>Initializes a new Encode instance.</p>
 </div></span>
   
 </li>
@@ -143,7 +154,7 @@
         <li class="public ">
   <span class="summary_signature">
     
-      <a href="#segments-instance_method" title="#segments (instance method)">#<strong>segments</strong>  &#x21d2; Object </a>
+      <a href="#segments-instance_method" title="#segments (instance method)">#<strong>segments</strong>  &#x21d2; String </a>
     
 
     
@@ -157,7 +168,9 @@
   
 
   
-    <span class="summary_desc"><div class='inline'></div></span>
+    <span class="summary_desc"><div class='inline'>
+<p>Encodes the JWT token and returns its segments.</p>
+</div></span>
   
 </li>
 
@@ -180,13 +193,94 @@
 </h3><div class="docstring">
   <div class="discussion">
     
-<p>Returns a new instance of Encode.</p>
+<p>Initializes a new Encode instance.</p>
 
 
   </div>
 </div>
 <div class="tags">
+  <p class="tag_title">Parameters:</p>
+<ul class="param">
   
+    <li>
+      
+        <span class='name'>options</span>
+      
+      
+        <span class='type'>(<tt>Hash</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the options for encoding the JWT token.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+  
+    
+    
+    <p class="tag_title">Options Hash (<tt>options</tt>):</p>
+    <ul class="option">
+      
+        <li>
+          <span class="name">:payload</span>
+          <span class="type">(<tt>Hash</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>the payload of the JWT token.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:headers</span>
+          <span class="type">(<tt>Hash</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>the headers of the JWT token.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:key</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>the key used to sign the JWT token.</p>
+</div>
+          
+        </li>
+      
+        <li>
+          <span class="name">:algorithm</span>
+          <span class="type">(<tt>String</tt>)</span>
+          <span class="default">
+            
+          </span>
+          
+            &mdash; <div class='inline'>
+<p>the algorithm used to sign the JWT token.</p>
+</div>
+          
+        </li>
+      
+    </ul>
+  
+
 
 </div><table class="source_code">
   <tr>
@@ -194,14 +288,14 @@
       <pre class="lines">
 
 
-7
-8
-9
-10
-11</pre>
+15
+16
+17
+18
+19</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/encode.rb', line 7</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/encode.rb', line 15</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_initialize'>initialize</span><span class='lparen'>(</span><span class='id identifier rubyid_options'>options</span><span class='rparen'>)</span>
   <span class='ivar'>@token</span>     <span class='op'>=</span> <span class='const'><span class='object_link'><a href="Token.html" title="JWT::Token (class)">Token</a></span></span><span class='period'>.</span><span class='id identifier rubyid_new'><span class='object_link'><a href="Token.html#initialize-instance_method" title="JWT::Token#initialize (method)">new</a></span></span><span class='lparen'>(</span><span class='label'>payload:</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:payload</span><span class='rbracket'>]</span><span class='comma'>,</span> <span class='label'>header:</span> <span class='id identifier rubyid_options'>options</span><span class='lbracket'>[</span><span class='symbol'>:headers</span><span class='rbracket'>]</span><span class='rparen'>)</span>
@@ -223,26 +317,55 @@
       <div class="method_details first">
   <h3 class="signature first" id="segments-instance_method">
   
-    #<strong>segments</strong>  &#x21d2; <tt>Object</tt> 
+    #<strong>segments</strong>  &#x21d2; <tt>String</tt> 
   
 
   
 
   
-</h3><table class="source_code">
+</h3><div class="docstring">
+  <div class="discussion">
+    
+<p>Encodes the JWT token and returns its segments.</p>
+
+
+  </div>
+</div>
+<div class="tags">
+  
+<p class="tag_title">Returns:</p>
+<ul class="return">
+  
+    <li>
+      
+      
+        <span class='type'>(<tt>String</tt>)</span>
+      
+      
+      
+        &mdash;
+        <div class='inline'>
+<p>the encoded JWT token.</p>
+</div>
+      
+    </li>
+  
+</ul>
+
+</div><table class="source_code">
   <tr>
     <td>
       <pre class="lines">
 
 
-13
-14
-15
-16
-17</pre>
+24
+25
+26
+27
+28</pre>
     </td>
     <td>
-      <pre class="code"><span class="info file"># File 'lib/jwt/encode.rb', line 13</span>
+      <pre class="code"><span class="info file"># File 'lib/jwt/encode.rb', line 24</span>
 
 <span class='kw'>def</span> <span class='id identifier rubyid_segments'>segments</span>
   <span class='ivar'>@token</span><span class='period'>.</span><span class='id identifier rubyid_verify_claims!'>verify_claims!</span><span class='lparen'>(</span><span class='symbol'>:numeric</span><span class='rparen'>)</span>
@@ -259,7 +382,7 @@
 </div>
 
       <div id="footer">
-  Generated on Sat Oct  5 18:06:40 2024 by
+  Generated on Sat Oct  5 21:04:55 2024 by
   <a href="https://yardoc.org" title="Yay! A Ruby Documentation Tool" target="_parent">yard</a>
   0.9.37 (ruby-3.3.5).
 </div>
