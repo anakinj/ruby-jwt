@@ -13,7 +13,9 @@ module JWT
       #   @return [JwkConfiguration] the JWK configuration.
       # @!attribute [rw] strict_base64_decoding
       #   @return [Boolean] whether strict Base64 decoding is enabled.
-      attr_accessor :decode, :jwk, :strict_base64_decoding
+      # @!attribute [rw] jwk
+      #   @return [EncodedTokenConfiguration] the JWK configuration.
+      attr_accessor :decode, :jwk, :strict_base64_decoding, :encoded_token
 
       # @!attribute [r] deprecation_warnings
       #   @return [Symbol] the deprecation warnings setting.
@@ -30,6 +32,7 @@ module JWT
       def reset!
         @decode                 = DecodeConfiguration.new
         @jwk                    = JwkConfiguration.new
+        @encoded_token          = EncodedTokenConfiguration.new
         @strict_base64_decoding = false
 
         self.deprecation_warnings = :once

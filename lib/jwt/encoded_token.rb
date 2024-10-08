@@ -22,10 +22,11 @@ module JWT
     #
     # @param jwt [String] the encoded JWT token.
     # @raise [ArgumentError] if the provided JWT is not a String.
-    def initialize(jwt)
+    def initialize(jwt, allow_unverified_access: false)
       raise ArgumentError 'Provided JWT must be a String' unless jwt.is_a?(String)
 
       @jwt = jwt
+      @allow_unverified_access = allow_unverified_access
       @encoded_header, @encoded_payload, @encoded_signature = jwt.split('.')
     end
 
@@ -106,6 +107,8 @@ module JWT
     alias to_s jwt
 
     private
+
+    attr_reader :allow_unverified_access
 
     def parse_and_decode(segment)
       JWT::JSON.parse(::JWT::Base64.url_decode(segment))
