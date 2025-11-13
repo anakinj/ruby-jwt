@@ -7,9 +7,9 @@
 
 A ruby implementation of the [RFC 7519 OAuth JSON Web Token (JWT)](https://tools.ietf.org/html/rfc7519) standard.
 
-If you have further questions related to development or usage, join us: [ruby-jwt google group](https://groups.google.com/forum/#!forum/ruby-jwt).
+If you have further questions related to development or usage, drop a question or comment in the [discussions](https://github.com/jwt/ruby-jwt/discussions).
 
-See [CHANGELOG.md](CHANGELOG.md) for a complete set of changes and [upgrade guide](UPGRADING.md) for upgrading between major versions.
+See [CHANGELOG.md](CHANGELOG.md) for a complete set of changes and [UPGRADING.md](UPGRADING.md) for upgrading between major versions.
 
 ## Sponsors
 
@@ -51,22 +51,6 @@ For safe cryptographic signing, you need to specify the algorithm in the options
 
 See [JSON Web Algorithms (JWA) 3.1. "alg" (Algorithm) Header Parameter Values for JWS](https://tools.ietf.org/html/rfc7518#section-3.1)
 
-### **NONE**
-
-- none - unsigned token
-
-```ruby
-payload = { data: 'test' }
-token   = JWT.encode(payload, nil, 'none')
-# => "eyJhbGciOiJub25lIn0.eyJkYXRhIjoidGVzdCJ9."
-
-decoded_token = JWT.decode(token, nil, true, { algorithm: 'none' })
-#  => [
-#       {"data"=>"test"}, # payload
-#       {"alg"=>"none"} # header
-#     ]
-```
-
 ### **HMAC**
 
 - HS256 - HMAC using SHA-256 hash algorithm
@@ -74,17 +58,23 @@ decoded_token = JWT.decode(token, nil, true, { algorithm: 'none' })
 - HS512 - HMAC using SHA-512 hash algorithm
 
 ```ruby
-payload     = { data: 'test' }
-hmac_secret = 'my$ecretK3y'
+# Create a token with a payload
+token = JWT::Token.new(payload: { data: 'example' })
+secret_key = 'my$ecretK3y'
+# Sign the token using a HMAC algorithm and a secret key
+token.sign!(algorithm: :hs256, key: secret_key)
 
-token = JWT.encode(payload, hmac_secret, 'HS256')
-# => "eyJhbGciOiJIUzI1NiJ9.eyJkYXRhIjoidGVzdCJ9.pNIWIL34Jo13LViZAJACzK6Yf0qnvT_BuwOxiMCPE-Y"
+# Get the encoded JWT
+jwt = token.jwt
+# jwt => "eyJhbGciOiJIUzI1NiJ9.eyJkYXRhIjoiZXhhbXBsZSJ9.Zt5XLZ5KOnW_O3cxiZEZIlrNO99I4nGBcZhYSeeBt-c"
 
-decoded_token = JWT.decode(token, hmac_secret, true, { algorithm: 'HS256' })
-# => [
-#      {"data"=>"test"}, # payload
-#      {"alg"=>"HS256"} # header
-#    ]
+# Decode and verify the signature and claims
+encoded_token = JWT::EncodedToken.new(jwt)
+encoded_token.verify!(signature: { algorithm: :hs256, key: secret_key })
+
+# Access the decoded payload and header
+payload = encoded_token.payload # {"data" => "example"}
+header  = encoded_token.header  # {"alg" => "HS256"}
 ```
 
 ### **RSA**
