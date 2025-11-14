@@ -164,7 +164,7 @@ Since version 3.0, the EdDSA algorithm has been moved to the [jwt-eddsa gem](htt
 
 ### **Custom algorithms**
 
-When encoding or decoding a token, you can pass in a custom object through the `algorithm` option to handle signing or verification. This custom object must include or extend the `JWT::JWA::SigningAlgorithm` module and implement certain methods:
+When encoding or decoding a token, you can pass in a custom object as the `algorithm` option to handle signing or verification. This custom object must include or extend the `JWT::JWA::SigningAlgorithm` module and implement certain methods:
 
 - For decoding/verifying: The object must implement the methods `alg` and `verify`.
 - For encoding/signing: The object must implement the methods `alg` and `sign`.
@@ -188,15 +188,23 @@ module CustomHS512Algorithm
   end
 end
 
-payload  = { data: 'test' }
-token    = JWT.encode(payload, 'secret', CustomHS512Algorithm)
-# => "eyJhbGciOiJIUzUxMiJ9.eyJkYXRhIjoidGVzdCJ9.aBNoejLEM2WMF3TxzRDKlehYdG2ATvFpGNauTI4GSD2VJseS_sC8covrVMlgslf0aJM4SKb3EIeORJBFPtZ33w"
+# Create a token with a payload
+token = JWT::Token.new(payload: { data: 'example' })
 
-decoded_token = JWT.decode(token, 'secret', true, algorithm: CustomHS512Algorithm)
-# => [
-#      {"data"=>"test"}, # payload
-#      {"alg"=>"HS512"} # header
-#    ]
+# Sign the token using a custom algorithm
+token.sign!(algorithm: CustomHS512Algorithm, key: 'secret')
+
+# Get the encoded JWT
+jwt = token.jwt
+# jwt => "eyJhbGciOiJIUzI1NiJ9.eyJkYXRhIjoiZXhhbXBsZSJ9..."
+
+# Decode and verify the signature and claims
+encoded_token = JWT::EncodedToken.new(jwt)
+encoded_token.verify!(signature: { algorithm: CustomHS512Algorithm, key: 'secret' })
+
+# Access the decoded payload and header
+payload = encoded_token.payload # {"data" => "example"}
+header  = encoded_token.header  # {"alg" => "HS512"}
 ```
 
 ### Add custom header fields
