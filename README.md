@@ -41,9 +41,9 @@ Finally require the gem in your application
 require 'jwt'
 ```
 
-## Algorithms and Usage
+## Supported algorithms
 
-The jwt gem natively supports the NONE, HMAC, RSASSA, ECDSA and RSASSA-PSS algorithms via the openssl library. The gem can be extended with additional or alternative implementations of the algorithms via extensions.
+The jwt gem natively supports the NONE, [HMAC](#HMAC), [RSASSA](#RSASSA), [ECDSA](#ECDSA) and [RSASSA-PSS](#RSASSA-PSS) algorithms via the openssl library. The gem can be extended with additional or alternative implementations of the algorithms via extensions.
 
 Additionally the EdDSA algorithm is supported via a the [jwt-eddsa gem](https://rubygems.org/gems/jwt-eddsa).
 
@@ -51,7 +51,7 @@ For safe cryptographic signing, you need to specify the algorithm in the options
 
 See [JSON Web Algorithms (JWA) 3.1. "alg" (Algorithm) Header Parameter Values for JWS](https://tools.ietf.org/html/rfc7518#section-3.1)
 
-### **HMAC**
+### HMAC
 
 - HS256 - HMAC using SHA-256 hash algorithm
 - HS384 - HMAC using SHA-384 hash algorithm
@@ -77,28 +77,34 @@ payload = encoded_token.payload # {"data" => "example"}
 header  = encoded_token.header  # {"alg" => "HS256"}
 ```
 
-### **RSA**
+### RSASSA
 
 - RS256 - RSA using SHA-256 hash algorithm
 - RS384 - RSA using SHA-384 hash algorithm
 - RS512 - RSA using SHA-512 hash algorithm
 
 ```ruby
-payload     = { data: 'test' }
+# Create a token with a payload
+token = JWT::Token.new(payload: { data: 'example' })
 rsa_private = OpenSSL::PKey::RSA.generate(2048)
 rsa_public  = rsa_private.public_key
+# Sign the token using a RS algorithm and a private key
+token.sign!(algorithm: 'RS256', key: rsa_private)
 
-token = JWT.encode(payload, rsa_private, 'RS256')
-# => "eyJhbGciOiJSUzI1NiJ9.eyJkYXRhIjoidGVzdCJ9.CCkO35qFPijW8Gwhbt8a80PB9fc9FJ19hCMnXSgoDF6Mlvlt0A4G-ah..."
+# Get the encoded JWT
+jwt = token.jwt
+# jwt => "eyJhbGciOiJIUzI1NiJ9.eyJkYXRhIjoiZXhhbXBsZSJ9..."
 
-decoded_token = JWT.decode(token, rsa_public, true, { algorithm: 'RS256' })
-# => [
-#      {"data"=>"test"}, # payload
-#      {"alg"=>"RS256"} # header
-#    ]
+# Decode and verify the signature and claims
+encoded_token = JWT::EncodedToken.new(jwt)
+encoded_token.verify!(signature: { algorithm: 'RS256', key: rsa_public })
+
+# Access the decoded payload and header
+payload = encoded_token.payload # {"data" => "example"}
+header  = encoded_token.header  # {"alg" => "RS256"}
 ```
 
-### **ECDSA**
+### ECDSA
 
 - ES256 - ECDSA using P-256 and SHA-256
 - ES384 - ECDSA using P-384 and SHA-384
@@ -106,43 +112,55 @@ decoded_token = JWT.decode(token, rsa_public, true, { algorithm: 'RS256' })
 - ES256K - ECDSA using P-256K and SHA-256
 
 ```ruby
-payload   = { data: 'test' }
+# Create a token with a payload
+token = JWT::Token.new(payload: { data: 'example' })
 ecdsa_key = OpenSSL::PKey::EC.generate('prime256v1')
+# Sign the token using a ES algorithm and a ECDSA key
+token.sign!(algorithm: 'ES256', key: ecdsa_key)
 
-token = JWT.encode(payload, ecdsa_key, 'ES256')
-# => "eyJhbGciOiJFUzI1NiJ9.eyJkYXRhIjoidGVzdCJ9.AlLW--kaF7EX1NMX9WJRuIW8NeRJbn2BLXHns7Q5TZr7Hy3lF6MOpMlp7GoxBFRLISQ6KrD0CJOrR8aogEsPeg"
+# Get the encoded JWT
+jwt = token.jwt
+# jwt => "eyJhbGciOiJIUzI1NiJ9.eyJkYXRhIjoiZXhhbXBsZSJ9..."
 
-decoded_token = JWT.decode(token, ecdsa_key, true, { algorithm: 'ES256' })
-# => [
-#      {"test"=>"data"}, # payload
-#      {"alg"=>"ES256"} # header
-#    ]
+# Decode and verify the signature and claims
+encoded_token = JWT::EncodedToken.new(jwt)
+encoded_token.verify!(signature: { algorithm: 'ES256', key: ecdsa_key })
+
+# Access the decoded payload and header
+payload = encoded_token.payload # {"data" => "example"}
+header  = encoded_token.header  # {"alg" => "ES256"}
 ```
 
-### **EdDSA**
-
-Since version 3.0, the EdDSA algorithm has been moved to the [jwt-eddsa gem](https://rubygems.org/gems/jwt-eddsa).
-
-### **RSASSA-PSS**
+### RSASSA-PSS
 
 - PS256 - RSASSA-PSS using SHA-256 hash algorithm
 - PS384 - RSASSA-PSS using SHA-384 hash algorithm
 - PS512 - RSASSA-PSS using SHA-512 hash algorithm
 
 ```ruby
-payload     = { data: 'test' }
+# Create a token with a payload
+token = JWT::Token.new(payload: { data: 'example' })
 rsa_private = OpenSSL::PKey::RSA.generate(2048)
 rsa_public  = rsa_private.public_key
+# Sign the token using a PS256 algorithm and a private key
+token.sign!(algorithm: 'PS256', key: rsa_private)
 
-token = JWT.encode(payload, rsa_private, 'PS256')
-# => "eyJhbGciOiJQUzI1NiJ9.eyJkYXRhIjoidGVzdCJ9.BRWizdUjD5zAWw-EDBcrl3dDpQDAePz9Ol3XKC43SggU47G8OWwveA_..."
+# Get the encoded JWT
+jwt = token.jwt
+# jwt => "eyJhbGciOiJIUzI1NiJ9.eyJkYXRhIjoiZXhhbXBsZSJ9..."
 
-decoded_token = JWT.decode(token, rsa_public, true, { algorithm: 'PS256' })
-# => [
-#      {"data"=>"test"}, # payload
-#      {"alg"=>"PS256"} # header
-#    ]
+# Decode and verify the signature and claims
+encoded_token = JWT::EncodedToken.new(jwt)
+encoded_token.verify!(signature: { algorithm: 'PS256', key: rsa_public })
+
+# Access the decoded payload and header
+payload = encoded_token.payload # {"data" => "example"}
+header  = encoded_token.header  # {"alg" => "PS256"}
 ```
+
+### EdDSA
+
+Since version 3.0, the EdDSA algorithm has been moved to the [jwt-eddsa gem](https://rubygems.org/gems/jwt-eddsa).
 
 ### **Custom algorithms**
 
