@@ -162,7 +162,7 @@ header  = encoded_token.header  # {"alg" => "PS256"}
 
 Since version 3.0, the EdDSA algorithm has been moved to the [jwt-eddsa gem](https://rubygems.org/gems/jwt-eddsa).
 
-### **Custom algorithms**
+### Custom algorithms
 
 When encoding or decoding a token, you can pass in a custom object as the `algorithm` option to handle signing or verification. This custom object must include or extend the `JWT::JWA::SigningAlgorithm` module and implement certain methods:
 
@@ -205,6 +205,286 @@ encoded_token.verify!(signature: { algorithm: CustomHS512Algorithm, key: 'secret
 # Access the decoded payload and header
 payload = encoded_token.payload # {"data" => "example"}
 header  = encoded_token.header  # {"alg" => "HS512"}
+```
+
+## Claims
+
+JSON Web Token defines a set of registered claim names. The claims are defined in [section 4.1](https://datatracker.ietf.org/doc/html/rfc7519#section-4.1) of the RFC. All the defined claims are _optional_ by default. The following claims are supported by this gem:
+
+- ['exp' (Expiration Time) Claim](#Expiration Time Claim)
+- 'nbf' (Not Before Time) Claim
+- 'iss' (Issuer) Claim
+- 'aud' (Audience) Claim
+- 'jti' (JWT ID) Claim
+- 'iat' (Issued At) Claim
+- 'sub' (Subject) Claim
+
+### Expiration Time Claim
+
+From [Oauth JSON Web Token 4.1.4. "exp" (Expiration Time) Claim](https://tools.ietf.org/html/rfc7519#section-4.1.4):
+
+> The `exp` (expiration time) claim identifies the expiration time on or after which the JWT MUST NOT be accepted for processing. The processing of the `exp` claim requires that the current date/time MUST be before the expiration date/time listed in the `exp` claim. Implementers MAY provide for some small `leeway`, usually no more than a few minutes, to account for clock skew. Its value MUST be a number containing a **_NumericDate_** value. Use of this claim is OPTIONAL.
+
+The `exp` claim is verified by default if it is present in the payload.
+
+```ruby
+# Create a token with a payload including a expiration time of a hour
+exp = Time.now.to_i + 3600
+token = JWT::Token.new(payload: { exp: exp, data: 'example' })
+
+# Sign the token using a HMAC algorithm and a secret key
+token.sign!(algorithm: 'HS256', key: 'my$ecretK3y')
+
+# Decode and verify the signature and claims
+encoded_token = JWT::EncodedToken.new(token.jwt)
+
+unless encoded_token.valid_claims?(:exp)
+  # Deal with a expired token
+end
+
+# Verifies the signature and exp claim. Raises JWT::ExpiredSignature if the exp claim is invalid.
+encoded_token.verify!(signature: { algorithm: 'HS256', key: 'my$ecretK3y' })
+```
+
+By default there is no leeway when verifying the `exp` claim. The `leeway` parameter can be provided to the verification for defining a custom leeway, the value is seconds.
+
+```ruby
+unless encoded_token.valid_claims?(exp: { leeway: 30 })
+  # Deal with a expired token
+end
+
+encoded_token.verify!(signature: { algorithm: 'HS256', key: 'my$ecretK3y' }, claims: { exp: { leeway: 30 } })
+```
+
+### Not Before Time Claim
+
+From [Oauth JSON Web Token 4.1.5. "nbf" (Not Before) Claim](https://tools.ietf.org/html/rfc7519#section-4.1.5):
+
+> The `nbf` (not before) claim identifies the time before which the JWT MUST NOT be accepted for processing. The processing of the `nbf` claim requires that the current date/time MUST be after or equal to the not-before date/time listed in the `nbf` claim. Implementers MAY provide for some small `leeway`, usually no more than a few minutes, to account for clock skew. Its value MUST be a number containing a **_NumericDate_** value. Use of this claim is OPTIONAL.
+
+```ruby
+# Create a token with a payload including a nbf timestamp in the future
+nbf = Time.now.to_i + 3600
+token = JWT::Token.new(payload: { nbf: nbf, data: 'example' })
+
+# Sign the token using a HMAC algorithm and a secret key
+token.sign!(algorithm: 'HS256', key: 'my$ecretK3y')
+
+# Decode and verify the signature and claims
+encoded_token = JWT::EncodedToken.new(token.jwt)
+
+unless encoded_token.valid_claims?(:nbf)
+  # Deal with a immature token
+end
+
+# Verifies the signature and nbf claim. Raises JWT::ImmatureSignature if the nbf claim is invalid.
+encoded_token.verify!(signature: { algorithm: 'HS256', key: 'my$ecretK3y' }, claims: [:exp, :nbf])
+```
+
+### Issuer Claim
+
+From [Oauth JSON Web Token 4.1.1. "iss" (Issuer) Claim](https://tools.ietf.org/html/rfc7519#section-4.1.1):
+
+> The `iss` (issuer) claim identifies the principal that issued the JWT. The processing of this claim is generally application specific. The `iss` value is a case-sensitive string containing a **_StringOrURI_** value. Use of this claim is OPTIONAL.
+
+You can pass multiple allowed issuers as an Array, verification will pass if one of them matches the `iss` value in the payload.
+
+```ruby
+iss = 'My Awesome Company Inc. or https://my.awesome.website/'
+token = JWT::Token.new(payload: { iss: iss, data: 'example' })
+
+# Sign the token using a HMAC algorithm and a secret key
+token.sign!(algorithm: 'HS256', key: 'my$ecretK3y')
+
+# Decode and verify the signature and claims
+encoded_token = JWT::EncodedToken.new(token.jwt)
+
+unless encoded_token.valid_claims?(iss: ['First allowed issuer', iss])
+  # Deal with invalid issuer claim
+end
+
+# Verifies the signature and iss claim. Raises JWT::InvalidIssuerError if the iss claim is invalid.
+encoded_token.verify!(signature: { algorithm: 'HS256', key: 'my$ecretK3y' }, claims:  {exp: {}, iss: ['First allowed issuer', iss]})
+```
+
+You can also pass a Regexp or Proc (with arity 1), verification will pass if the regexp matches or the proc returns truthy.
+
+```ruby
+encoded_token.valid_claims?(iss: [%r'https://my.awesome.website/'])
+encoded_token.valid_claims?(iss: [->(issuer) { issuer.start_with?('My Awesome Company Inc') }])
+encoded_token.valid_claims?(iss: [method(:valid_issuer?)])
+
+# somewhere in the same class:
+def valid_issuer?(issuer)
+  # custom validation
+end
+```
+
+### Audience Claim
+
+From [Oauth JSON Web Token 4.1.3. "aud" (Audience) Claim](https://tools.ietf.org/html/rfc7519#section-4.1.3):
+
+> The `aud` (audience) claim identifies the recipients that the JWT is intended for. Each principal intended to process the JWT MUST identify itself with a value in the audience claim. If the principal processing the claim does not identify itself with a value in the `aud` claim when this claim is present, then the JWT MUST be rejected. In the general case, the `aud` value is an array of case-sensitive strings, each containing a **_StringOrURI_** value. In the special case when the JWT has one audience, the `aud` value MAY be a single case-sensitive string containing a **_StringOrURI_** value. The interpretation of audience values is generally application specific. Use of this claim is OPTIONAL.
+
+```ruby
+aud = ['Service A', 'Service B']
+token = JWT::Token.new(payload: { aud: aud, data: 'example' })
+token.sign!(algorithm: 'HS256', key: 'my$ecretK3y')
+
+# Decode and verify the signature and claims
+encoded_token = JWT::EncodedToken.new(token.jwt)
+
+unless encoded_token.valid_claims?(aud: ['Service A'])
+  # Deal with invalid audience claim
+end
+
+# Verifies the signature and aud claim. Raises JWT::InvalidAudError if the aud claim is invalid.
+encoded_token.verify!(signature: { algorithm: 'HS256', key: 'my$ecretK3y' }, claims: { exp: {}, aud: ['Service A'] })
+```
+
+### Issued At Claim
+
+From [Oauth JSON Web Token 4.1.6. "iat" (Issued At) Claim](https://tools.ietf.org/html/rfc7519#section-4.1.6):
+
+> The `iat` (issued at) claim identifies the time at which the JWT was issued. This claim can be used to determine the age of the JWT. The `leeway` option is not taken into account when verifying this claim. The `iat_leeway` option was removed in version 2.2.0. Its value MUST be a number containing a **_NumericDate_** value. Use of this claim is OPTIONAL.
+
+```ruby
+iat = Time.now.to_i
+token = JWT::Token.new(payload: { iat: iat, data: 'example' })
+token.sign!(algorithm: 'HS256', key: 'my$ecretK3y')
+
+# Decode and verify the signature and claims
+encoded_token = JWT::EncodedToken.new(token.jwt)
+
+unless encoded_token.valid_claims?(:iat)
+  # Deal with invalid issued at claim
+end
+
+# Verifies the signature and iat claim. Raises JWT::InvalidIatError if the iat claim is invalid.
+encoded_token.verify!(signature: { algorithm: 'HS256', key: 'my$ecretK3y' }, claims: [:exp, :iat])
+```
+
+### JWT ID Claim
+
+From [Oauth JSON Web Token 4.1.7. "jti" (JWT ID) Claim](https://tools.ietf.org/html/rfc7519#section-4.1.7):
+
+> The `jti` (JWT ID) claim provides a unique identifier for the JWT. The identifier value MUST be assigned in a manner that ensures that there is a negligible probability that the same value will be accidentally assigned to a different data object; if the application uses multiple issuers, collisions MUST be prevented among values produced by different issuers as well. The `jti` claim can be used to prevent the JWT from being replayed. The `jti` value is a case-sensitive string. Use of this claim is OPTIONAL.
+
+```ruby
+
+# Use the secret and iat to create a unique key per request to prevent replay attacks
+hmac_secret = 'my$ecretK3y'
+iat = Time.now.to_i
+jti = Digest::SHA256.hexdigest([hmac_secret, iat].join(':'))
+token = JWT::Token.new(payload: { iat: iat, jti: jti, data: 'example' })
+token.sign!(algorithm: 'HS256', key: hmac_secret)
+
+# Decode and verify the signature and claims
+encoded_token = JWT::EncodedToken.new(token.jwt)
+
+unless encoded_token.valid_claims?(:jti)
+  # Deal with the case where the jti is missing
+end
+
+jti_validator = ->(jti, payload) { !Jtis.exists?(jti) }
+
+unless encoded_token.valid_claims?(jti: jti_validator)
+  # Deal with the case where the jti is missing
+end
+
+# Verifies the signature and jti claim. Raises JWT::InvalidJtiError if the aud claim is invalid.
+encoded_token.verify!(signature: { algorithm: 'HS256', key: hmac_secret }, claims: { exp: {}, jti: jti_validator })
+```
+
+### Subject Claim
+
+From [Oauth JSON Web Token 4.1.2. "sub" (Subject) Claim](https://tools.ietf.org/html/rfc7519#section-4.1.2):
+
+> The `sub` (subject) claim identifies the principal that is the subject of the JWT. The Claims in a JWT are normally statements about the subject. The subject value MUST either be scoped to be locally unique in the context of the issuer or be globally unique. The processing of this claim is generally application specific. The sub value is a case-sensitive string containing a **_StringOrURI_** value. Use of this claim is OPTIONAL.
+
+```ruby
+sub = 'Subject'
+token = JWT::Token.new(payload: { sub: sub, data: 'example' })
+token.sign!(algorithm: 'HS256', key: 'my$ecretK3y')
+
+# Decode and verify the signature and claims
+encoded_token = JWT::EncodedToken.new(token.jwt)
+
+unless encoded_token.valid_claims?(sub: 'Subject')
+  # Deal with invalid subject claim
+end
+
+# Verifies the signature and sub claim. Raises JWT::InvalidSubError if the sub claim is invalid.
+encoded_token.verify!(signature: { algorithm: 'HS256', key: 'my$ecretK3y' }, claims: { exp: {}, sub: 'Subject' })
+```
+
+### Standalone claim verification
+
+The JWT claim verifications can be used to verify any Hash to include expected keys and values.
+
+A few example on verifying the claims for a payload:
+
+```ruby
+JWT::Claims.verify_payload!({"exp" => Time.now.to_i + 10}, :numeric, :exp)
+# => nil
+JWT::Claims.valid_payload?({"exp" => Time.now.to_i + 10}, :exp)
+# => true
+JWT::Claims.payload_errors({"exp" => Time.now.to_i - 10}, :exp)
+# => [#<struct JWT::Claims::Error message="Signature has expired">]
+JWT::Claims.verify_payload!({"exp" => Time.now.to_i - 10}, :exp)
+# => raises JWT::ExpiredSignature
+JWT::Claims.verify_payload!({"exp" => Time.now.to_i - 10}, exp: { leeway: 11})
+# => nil
+JWT::Claims.verify_payload!({"exp" => Time.now.to_i + 10, "sub" => "subject"}, :exp, sub: "subject")
+# => nil
+```
+
+### Using a key finder
+
+```ruby
+hmac_secret = 'my$ecretK3y'
+issuers = %w[My_Awesome_Company1 My_Awesome_Company2]
+secrets = { issuers.first => hmac_secret,
+            issuers.last => 'hmac_secret2' }
+
+token = JWT::Token.new(payload: { iss: issuers.first, data: 'example' })
+token.sign!(algorithm: 'HS256', key: hmac_secret)
+
+encoded_token = JWT::EncodedToken.new(token.jwt)
+
+find_key = ->(token) { secrets.fetch(token.unverified_payload['iss']) }
+
+encoded_token.verify!(signature: { algorithm: 'HS256', key_finder: find_key }, claims: { exp: {}, iss: issuers })
+```
+
+### Required Claims
+
+You can specify claims that must be present for decoding to be successful. JWT::MissingRequiredClaim will be raised if any are missing
+
+```ruby
+# Will raise a JWT::MissingRequiredClaim error if the 'exp' claim is absent
+JWT.decode(token, hmac_secret, true, { required_claims: ['exp'], algorithm: 'HS256' })
+```
+
+### X.509 certificates in x5c header
+
+A JWT signature can be verified using certificate(s) given in the `x5c` header. Before doing that, the trustworthiness of these certificate(s) must be established. This is done in accordance with RFC 5280 which (among other things) verifies the certificate(s) are issued by a trusted root certificate, the timestamps are valid, and none of the certificate(s) are revoked (i.e. being present in the root certificate's Certificate Revocation List).
+
+```ruby
+root_certificates = [] # trusted `OpenSSL::X509::Certificate` objects
+crl_uris = root_certificates.map(&:crl_uris)
+crls = crl_uris.map do |uri|
+  # look up cached CRL by `uri` and return it if found, otherwise continue
+  crl = Net::HTTP.get(uri)
+  crl = OpenSSL::X509::CRL.new(crl)
+  # cache `crl` using `uri` as the key, expiry set to `crl.next_update` timestamp
+end
+
+begin
+  JWT.decode(token, nil, true, { x5c: { root_certificates: root_certificates, crls: crls } })
+rescue JWT::DecodeError
+  # Handle error, e.g. x5c header certificate revoked or expired
+end
 ```
 
 ### Add custom header fields
@@ -339,318 +619,6 @@ encoded_token = JWT::EncodedToken.new(token.jwt)
 encoded_token.encoded_payload = "eyJwYXkiOiJsb2FkIn0"
 encoded_token.verify_signature!(algorithm: 'HS256', key: "secret")
 encoded_token.payload # => {"pay"=>"load"}
-```
-
-## Claims
-
-JSON Web Token defines some reserved claim names and defines how they should be
-used. JWT supports these reserved claim names:
-
-- 'exp' (Expiration Time) Claim
-- 'nbf' (Not Before Time) Claim
-- 'iss' (Issuer) Claim
-- 'aud' (Audience) Claim
-- 'jti' (JWT ID) Claim
-- 'iat' (Issued At) Claim
-- 'sub' (Subject) Claim
-
-### Expiration Time Claim
-
-From [Oauth JSON Web Token 4.1.4. "exp" (Expiration Time) Claim](https://tools.ietf.org/html/rfc7519#section-4.1.4):
-
-> The `exp` (expiration time) claim identifies the expiration time on or after which the JWT MUST NOT be accepted for processing. The processing of the `exp` claim requires that the current date/time MUST be before the expiration date/time listed in the `exp` claim. Implementers MAY provide for some small `leeway`, usually no more than a few minutes, to account for clock skew. Its value MUST be a number containing a **_NumericDate_** value. Use of this claim is OPTIONAL.
-
-```ruby
-exp = Time.now.to_i + 4 * 3600
-exp_payload = { data: 'data', exp: exp }
-
-token = JWT.encode(exp_payload, hmac_secret, 'HS256')
-
-begin
-  decoded_token = JWT.decode(token, hmac_secret, true, { algorithm: 'HS256' })
-rescue JWT::ExpiredSignature
-  # Handle expired token, e.g. logout user or deny access
-end
-```
-
-The Expiration Claim verification can be disabled.
-
-```ruby
-# Decode token without raising JWT::ExpiredSignature error
-JWT.decode(token, hmac_secret, true, { verify_expiration: false, algorithm: 'HS256' })
-```
-
-Leeway and the exp claim.
-
-```ruby
-exp = Time.now.to_i - 10
-leeway = 30 # seconds
-
-exp_payload = { data: 'data', exp: exp }
-
-# build expired token
-token = JWT.encode(exp_payload, hmac_secret, 'HS256')
-
-begin
-  # add leeway to ensure the token is still accepted
-  decoded_token = JWT.decode(token, hmac_secret, true, { exp_leeway: leeway, algorithm: 'HS256' })
-rescue JWT::ExpiredSignature
-  # Handle expired token, e.g. logout user or deny access
-end
-```
-
-### Not Before Time Claim
-
-From [Oauth JSON Web Token 4.1.5. "nbf" (Not Before) Claim](https://tools.ietf.org/html/rfc7519#section-4.1.5):
-
-> The `nbf` (not before) claim identifies the time before which the JWT MUST NOT be accepted for processing. The processing of the `nbf` claim requires that the current date/time MUST be after or equal to the not-before date/time listed in the `nbf` claim. Implementers MAY provide for some small `leeway`, usually no more than a few minutes, to account for clock skew. Its value MUST be a number containing a **_NumericDate_** value. Use of this claim is OPTIONAL.
-
-```ruby
-nbf = Time.now.to_i - 3600
-nbf_payload = { data: 'data', nbf: nbf }
-
-token = JWT.encode(nbf_payload, hmac_secret, 'HS256')
-
-begin
-  decoded_token = JWT.decode(token, hmac_secret, true, { algorithm: 'HS256' })
-rescue JWT::ImmatureSignature
-  # Handle invalid token, e.g. logout user or deny access
-end
-```
-
-The Not Before Claim verification can be disabled.
-
-```ruby
-# Decode token without raising JWT::ImmatureSignature error
-JWT.decode(token, hmac_secret, true, { verify_not_before: false, algorithm: 'HS256' })
-```
-
-Leeway and the nbf claim.
-
-```ruby
-nbf = Time.now.to_i + 10
-leeway = 30
-
-nbf_payload = { data: 'data', nbf: nbf }
-
-# build expired token
-token = JWT.encode(nbf_payload, hmac_secret, 'HS256')
-
-begin
-  # add leeway to ensure the token is valid
-  decoded_token = JWT.decode(token, hmac_secret, true, { nbf_leeway: leeway, algorithm: 'HS256' })
-rescue JWT::ImmatureSignature
-  # Handle invalid token, e.g. logout user or deny access
-end
-```
-
-### Issuer Claim
-
-From [Oauth JSON Web Token 4.1.1. "iss" (Issuer) Claim](https://tools.ietf.org/html/rfc7519#section-4.1.1):
-
-> The `iss` (issuer) claim identifies the principal that issued the JWT. The processing of this claim is generally application specific. The `iss` value is a case-sensitive string containing a **_StringOrURI_** value. Use of this claim is OPTIONAL.
-
-You can pass multiple allowed issuers as an Array, verification will pass if one of them matches the `iss` value in the payload.
-
-```ruby
-iss = 'My Awesome Company Inc. or https://my.awesome.website/'
-iss_payload = { data: 'data', iss: iss }
-
-token = JWT.encode(iss_payload, hmac_secret, 'HS256')
-
-begin
-  # Add iss to the validation to check if the token has been manipulated
-  decoded_token = JWT.decode(token, hmac_secret, true, { iss: iss, verify_iss: true, algorithm: 'HS256' })
-rescue JWT::InvalidIssuerError
-  # Handle invalid token, e.g. logout user or deny access
-end
-```
-
-You can also pass a Regexp or Proc (with arity 1), verification will pass if the regexp matches or the proc returns truthy.
-On supported ruby versions (>= 2.5) you can also delegate to methods, on older versions you will have
-to convert them to proc (using `to_proc`)
-
-```ruby
-JWT.decode(token, hmac_secret, true,
-           iss: %r'https://my.awesome.website/',
-           verify_iss: true,
-           algorithm: 'HS256')
-```
-
-```ruby
-JWT.decode(token, hmac_secret, true,
-           iss: ->(issuer) { issuer.start_with?('My Awesome Company Inc') },
-           verify_iss: true,
-           algorithm: 'HS256')
-```
-
-```ruby
-JWT.decode(token, hmac_secret, true,
-           iss: method(:valid_issuer?),
-           verify_iss: true,
-           algorithm: 'HS256')
-
-# somewhere in the same class:
-def valid_issuer?(issuer)
-  # custom validation
-end
-```
-
-### Audience Claim
-
-From [Oauth JSON Web Token 4.1.3. "aud" (Audience) Claim](https://tools.ietf.org/html/rfc7519#section-4.1.3):
-
-> The `aud` (audience) claim identifies the recipients that the JWT is intended for. Each principal intended to process the JWT MUST identify itself with a value in the audience claim. If the principal processing the claim does not identify itself with a value in the `aud` claim when this claim is present, then the JWT MUST be rejected. In the general case, the `aud` value is an array of case-sensitive strings, each containing a **_StringOrURI_** value. In the special case when the JWT has one audience, the `aud` value MAY be a single case-sensitive string containing a **_StringOrURI_** value. The interpretation of audience values is generally application specific. Use of this claim is OPTIONAL.
-
-```ruby
-aud = ['Young', 'Old']
-aud_payload = { data: 'data', aud: aud }
-
-token = JWT.encode(aud_payload, hmac_secret, 'HS256')
-
-begin
-  # Add aud to the validation to check if the token has been manipulated
-  decoded_token = JWT.decode(token, hmac_secret, true, { aud: aud, verify_aud: true, algorithm: 'HS256' })
-rescue JWT::InvalidAudError
-  # Handle invalid token, e.g. logout user or deny access
-  puts 'Audience Error'
-end
-```
-
-### JWT ID Claim
-
-From [Oauth JSON Web Token 4.1.7. "jti" (JWT ID) Claim](https://tools.ietf.org/html/rfc7519#section-4.1.7):
-
-> The `jti` (JWT ID) claim provides a unique identifier for the JWT. The identifier value MUST be assigned in a manner that ensures that there is a negligible probability that the same value will be accidentally assigned to a different data object; if the application uses multiple issuers, collisions MUST be prevented among values produced by different issuers as well. The `jti` claim can be used to prevent the JWT from being replayed. The `jti` value is a case-sensitive string. Use of this claim is OPTIONAL.
-
-```ruby
-# Use the secret and iat to create a unique key per request to prevent replay attacks
-jti_raw = [hmac_secret, iat].join(':').to_s
-jti = Digest::MD5.hexdigest(jti_raw)
-jti_payload = { data: 'data', iat: iat, jti: jti }
-
-token = JWT.encode(jti_payload, hmac_secret, 'HS256')
-
-begin
-  # If :verify_jti is true, validation will pass if a JTI is present
-  #decoded_token = JWT.decode(token, hmac_secret, true, { verify_jti: true, algorithm: 'HS256' })
-  # Alternatively, pass a proc with your own code to check if the JTI has already been used
-  decoded_token = JWT.decode(token, hmac_secret, true, { verify_jti: proc { |jti| my_validation_method(jti) }, algorithm: 'HS256' })
-  # or
-  decoded_token = JWT.decode(token, hmac_secret, true, { verify_jti: proc { |jti, payload| my_validation_method(jti, payload) }, algorithm: 'HS256' })
-rescue JWT::InvalidJtiError
-  # Handle invalid token, e.g. logout user or deny access
-  puts 'Error'
-end
-```
-
-### Issued At Claim
-
-From [Oauth JSON Web Token 4.1.6. "iat" (Issued At) Claim](https://tools.ietf.org/html/rfc7519#section-4.1.6):
-
-> The `iat` (issued at) claim identifies the time at which the JWT was issued. This claim can be used to determine the age of the JWT. The `leeway` option is not taken into account when verifying this claim. The `iat_leeway` option was removed in version 2.2.0. Its value MUST be a number containing a **_NumericDate_** value. Use of this claim is OPTIONAL.
-
-```ruby
-iat = Time.now.to_i
-iat_payload = { data: 'data', iat: iat }
-
-token = JWT.encode(iat_payload, hmac_secret, 'HS256')
-
-begin
-  # Add iat to the validation to check if the token has been manipulated
-  decoded_token = JWT.decode(token, hmac_secret, true, { verify_iat: true, algorithm: 'HS256' })
-rescue JWT::InvalidIatError
-  # Handle invalid token, e.g. logout user or deny access
-end
-```
-
-### Subject Claim
-
-From [Oauth JSON Web Token 4.1.2. "sub" (Subject) Claim](https://tools.ietf.org/html/rfc7519#section-4.1.2):
-
-> The `sub` (subject) claim identifies the principal that is the subject of the JWT. The Claims in a JWT are normally statements about the subject. The subject value MUST either be scoped to be locally unique in the context of the issuer or be globally unique. The processing of this claim is generally application specific. The sub value is a case-sensitive string containing a **_StringOrURI_** value. Use of this claim is OPTIONAL.
-
-```ruby
-sub = 'Subject'
-sub_payload = { data: 'data', sub: sub }
-
-token = JWT.encode(sub_payload, hmac_secret, 'HS256')
-
-begin
-  # Add sub to the validation to check if the token has been manipulated
-  decoded_token = JWT.decode(token, hmac_secret, true, { sub: sub, verify_sub: true, algorithm: 'HS256' })
-rescue JWT::InvalidSubError
-  # Handle invalid token, e.g. logout user or deny access
-end
-```
-
-### Standalone claim verification
-
-The JWT claim verifications can be used to verify any Hash to include expected keys and values.
-
-A few example on verifying the claims for a payload:
-
-```ruby
-JWT::Claims.verify_payload!({"exp" => Time.now.to_i + 10}, :numeric, :exp)
-JWT::Claims.valid_payload?({"exp" => Time.now.to_i + 10}, :exp)
-# => true
-JWT::Claims.payload_errors({"exp" => Time.now.to_i - 10}, :exp)
-# => [#<struct JWT::Claims::Error message="Signature has expired">]
-JWT::Claims.verify_payload!({"exp" => Time.now.to_i - 10}, exp: { leeway: 11})
-
-JWT::Claims.verify_payload!({"exp" => Time.now.to_i + 10, "sub" => "subject"}, :exp, sub: "subject")
-```
-
-### Finding a Key
-
-To dynamically find the key for verifying the JWT signature, pass a block to the decode block. The block receives headers and the original payload as parameters. It should return with the key to verify the signature that was used to sign the JWT.
-
-```ruby
-issuers = %w[My_Awesome_Company1 My_Awesome_Company2]
-iss_payload = { data: 'data', iss: issuers.first }
-
-secrets = { issuers.first => hmac_secret, issuers.last => 'hmac_secret2' }
-
-token = JWT.encode(iss_payload, hmac_secret, 'HS256')
-
-begin
-  # Add iss to the validation to check if the token has been manipulated
-  decoded_token = JWT.decode(token, nil, true, { iss: issuers, verify_iss: true, algorithm: 'HS256' }) do |_headers, payload|
-    secrets[payload['iss']]
-  end
-rescue JWT::InvalidIssuerError
-  # Handle invalid token, e.g. logout user or deny access
-end
-```
-
-### Required Claims
-
-You can specify claims that must be present for decoding to be successful. JWT::MissingRequiredClaim will be raised if any are missing
-
-```ruby
-# Will raise a JWT::MissingRequiredClaim error if the 'exp' claim is absent
-JWT.decode(token, hmac_secret, true, { required_claims: ['exp'], algorithm: 'HS256' })
-```
-
-### X.509 certificates in x5c header
-
-A JWT signature can be verified using certificate(s) given in the `x5c` header. Before doing that, the trustworthiness of these certificate(s) must be established. This is done in accordance with RFC 5280 which (among other things) verifies the certificate(s) are issued by a trusted root certificate, the timestamps are valid, and none of the certificate(s) are revoked (i.e. being present in the root certificate's Certificate Revocation List).
-
-```ruby
-root_certificates = [] # trusted `OpenSSL::X509::Certificate` objects
-crl_uris = root_certificates.map(&:crl_uris)
-crls = crl_uris.map do |uri|
-  # look up cached CRL by `uri` and return it if found, otherwise continue
-  crl = Net::HTTP.get(uri)
-  crl = OpenSSL::X509::CRL.new(crl)
-  # cache `crl` using `uri` as the key, expiry set to `crl.next_update` timestamp
-end
-
-begin
-  JWT.decode(token, nil, true, { x5c: { root_certificates: root_certificates, crls: crls } })
-rescue JWT::DecodeError
-  # Handle error, e.g. x5c header certificate revoked or expired
-end
 ```
 
 ## JSON Web Key (JWK)
