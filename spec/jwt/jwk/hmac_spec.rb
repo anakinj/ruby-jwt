@@ -27,6 +27,12 @@ RSpec.describe JWT::JWK::HMAC do
     end
   end
 
+  describe '#public_key' do
+    it 'returns nil' do
+      expect(jwk.public_key).to be_nil
+    end
+  end
+
   describe '#export' do
     let(:kid) { nil }
 
