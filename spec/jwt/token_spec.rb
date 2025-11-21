@@ -6,6 +6,13 @@ RSpec.describe JWT::Token do
 
   subject(:token) { described_class.new(payload: payload, header: header) }
 
+  describe '.encode' do
+    it 'returns a JWT' do
+      jwt = described_class.encode(payload: payload, header: { iss: 'iss' }, signature: { algorithm: 'HS256', key: 'secret' })
+      expect(jwt).to eq('eyJpc3MiOiJpc3MiLCJhbGciOiJIUzI1NiJ9.eyJwYXkiOiJsb2FkIn0.dESapWMDfpheAXP0vO2jy5ZHm1W1znxWqA3p090SG64')
+    end
+  end
+
   describe '#sign!' do
     it 'signs the token' do
       token.sign!(algorithm: 'HS256', key: 'secret')

@@ -12,6 +12,9 @@ Metrics/AbcSize:
 Metrics/MethodLength:
   Max: 18
 
+Metrics/ClassLength:
+  Max: 110
+
 Metrics/BlockLength:
   Exclude:
     - spec/**/*_spec.rb
@@ -22,6 +25,3 @@ Layout/LineLength:
 
 Gemspec/DevelopmentDependencies:
   EnforcedStyle: gemspec
-
-Naming/PredicateMethod:
-  Enabled: false

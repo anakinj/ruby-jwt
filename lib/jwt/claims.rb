@@ -12,6 +12,7 @@ require_relative 'claims/numeric'
 require_relative 'claims/required'
 require_relative 'claims/subject'
 require_relative 'claims/verifier'
+require_relative 'claims/claims_context'
 
 module JWT
   # JWT Claim verifications

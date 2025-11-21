@@ -15,6 +15,10 @@ module JWT
   #   token.header # => {"custom"=>"value", "alg"=>"HS256"}
   #
   class Token
+    def self.encode(signature:, **kwargs)
+      new(**kwargs).tap { |token| token.sign!(**signature) }.jwt
+    end
+
     # Initializes a new Token instance.
     #
     # @param header [Hash] the header of the JWT token.

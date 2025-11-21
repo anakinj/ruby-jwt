@@ -12,22 +12,6 @@ module JWT
   #   encoded_token.verify_signature!(algorithm: 'HS256', key: 'secret')
   #   encoded_token.payload # => {'pay' => 'load'}
   class EncodedToken
-    # @private
-    # Allow access to the unverified payload for claim verification.
-    class ClaimsContext
-      extend Forwardable
-
-      def_delegators :@token, :header, :unverified_payload
-
-      def initialize(token)
-        @token = token
-      end
-
-      def payload
-        unverified_payload
-      end
-    end
-
     DEFAULT_CLAIMS = [:exp].freeze
 
     private_constant(:DEFAULT_CLAIMS)
@@ -48,6 +32,14 @@ module JWT
       @claims_verified    = false
 
       @encoded_header, @encoded_payload, @encoded_signature = jwt.split('.')
+    end
+
+    def signature_verified?
+      @signature_verified
+    end
+
+    def claims_verified?
+      @claims_verified
     end
 
     # Returns the decoded signature of the JWT token.
@@ -168,7 +160,7 @@ module JWT
     # @param options [Array<Symbol>, Hash] the claims to verify. By default, it checks the 'exp' claim.
     # @raise [JWT::DecodeError] if the claims are invalid.
     def verify_claims!(*options)
-      Claims::Verifier.verify!(ClaimsContext.new(self), *claims_options(options)).tap do
+      Claims::Verifier.verify!(Claims::ClaimsContext.new(self), *claims_options(options)).tap do
         @claims_verified = true
       end
     rescue StandardError
@@ -180,7 +172,7 @@ module JWT
     # @param options [Array<Symbol>, Hash] the claims to verify. By default, it checks the 'exp' claim.
     # @return [Array<Symbol>] the errors of the claims.
     def claim_errors(*options)
-      Claims::Verifier.errors(ClaimsContext.new(self), *claims_options(options))
+      Claims::Verifier.errors(Claims::ClaimsContext.new(self), *claims_options(options))
     end
 
     # Returns whether the claims of the token are valid.
@@ -191,6 +183,10 @@ module JWT
     end
 
     alias to_s jwt
+
+    def self.decode(token, **kwargs)
+      new(token).tap { |instance| instance.verify!(**kwargs) }
+    end
 
     private
 

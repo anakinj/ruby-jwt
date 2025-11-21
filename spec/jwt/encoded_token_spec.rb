@@ -13,6 +13,22 @@ RSpec.describe JWT::EncodedToken do
 
   subject(:token) { described_class.new(encoded_token) }
 
+  describe '.decode' do
+    it 'creates a verified token object' do
+      verified_token = described_class.decode(encoded_token, signature: { algorithm: 'HS256', key: 'secret' })
+      expect(verified_token).to be_a(described_class)
+      expect(verified_token.signature_verified?).to be(true)
+      expect(verified_token.claims_verified?).to be(true)
+    end
+
+    context 'when provided key is wrong' do
+      it 'raises a JWT::VerificationError' do
+        expect { described_class.decode(encoded_token, signature: { algorithm: 'HS256', key: 'wrong' }) }
+          .to raise_error(JWT::VerificationError)
+      end
+    end
+  end
+
   describe '#unverified_payload' do
     it { expect(token.unverified_payload).to eq(payload) }
 
