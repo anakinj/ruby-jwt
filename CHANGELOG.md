@@ -1,5 +1,11 @@
 # Changelog
 
+## [v2.10.2](https://github.com/jwt/ruby-jwt/tree/v2.10.2) (2026-05-21)
+
+**Fixes and enhancements:**
+
+- Reject `nil` and empty HMAC keys when signing and verifying ([CVE-2026-45363](https://www.cve.org/CVERecord?id=CVE-2026-45363) / [GHSA-c32j-vqhx-rx3x](https://github.com/jwt/ruby-jwt/security/advisories/GHSA-c32j-vqhx-rx3x))
+
 ## [v2.10.1](https://github.com/jwt/ruby-jwt/tree/v2.10.1) (2024-12-26)
 
 **Fixes and enhancements:**
