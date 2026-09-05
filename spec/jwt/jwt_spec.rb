@@ -632,39 +632,20 @@ RSpec.describe JWT do
 
   describe '::JWT.decode with verify_iat parameter' do
     let!(:time_now) { Time.now }
-    let(:token)     { JWT.encode({ pay: 'load', iat: iat }, 'secret', 'HS256') }
-
-    subject(:decoded_token) { JWT.decode(token, 'secret', true, verify_iat: true) }
+    let(:token) { JWT.encode({ pay: 'load', iat: time_now.to_i + 1 }, 'secret', 'HS256') }
 
     before { allow(Time).to receive(:now) { time_now } }
 
-    context 'when iat is exactly the same as Time.now and iat is given as a float' do
-      let(:iat) { time_now.to_f }
-      it 'considers iat valid' do
-        expect(decoded_token).to be_an(Array)
-      end
+    it 'leaves iat unverified by default' do
+      expect(JWT.decode(token, 'secret', true)).to be_an(Array)
     end
 
-    context 'when iat is exactly the same as Time.now and iat is given as floored integer' do
-      let(:iat) { time_now.to_f.floor }
-      it 'considers iat valid' do
-        expect(decoded_token).to be_an(Array)
-      end
+    it 'verifies iat when the option is given' do
+      expect { JWT.decode(token, 'secret', true, verify_iat: true) }.to raise_error(JWT::InvalidIatError, 'Invalid iat')
     end
 
-    context 'when iat is 1 second after Time.now' do
-      let(:iat) { time_now.to_i + 1 }
-      it 'raises an error' do
-        expect { decoded_token }.to raise_error(JWT::InvalidIatError, 'Invalid iat')
-      end
-
-      context 'when a leeway covering the drift is given' do
-        subject(:decoded_token) { JWT.decode(token, 'secret', true, verify_iat: { leeway: 1 }) }
-
-        it 'considers iat valid' do
-          expect(decoded_token).to be_an(Array)
-        end
-      end
+    it 'passes the leeway on to the iat verification' do
+      expect(JWT.decode(token, 'secret', true, verify_iat: { leeway: 1 })).to be_an(Array)
     end
   end
 
