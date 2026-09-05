@@ -494,7 +494,6 @@ RSpec.describe JWT do
 
     context 'issuer claim' do
       let(:iss) { 'ruby-jwt-gem' }
-      let(:invalid_token) { JWT.encode payload, data[:secret] }
 
       let(:token) do
         iss_payload = payload.merge(iss: iss)
