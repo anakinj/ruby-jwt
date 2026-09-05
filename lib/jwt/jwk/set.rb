@@ -12,25 +12,14 @@ module JWT
 
       attr_reader :keys
 
-      def initialize(jwks = nil, options = {}) # rubocop:disable Metrics/CyclomaticComplexity
-        jwks ||= {}
-
+      def initialize(jwks = nil, options = {})
         @keys = case jwks
-                when JWT::JWK::Set # Simple duplication
-                  jwks.keys.dup
-                when JWT::JWK::KeyBase # Singleton
-                  [jwks]
-                when Hash
-                  jwks = jwks.transform_keys(&:to_sym)
-                  [*jwks[:keys]].each_with_object([]) do |k, arr|
-                    arr << JWT::JWK.new(k, nil, options)
-                  rescue JWT::UnsupportedKeyType
-                    nil
-                  end
-                when Array
-                  jwks.map { |k| JWT::JWK.new(k, nil, options) }
-                else
-                  raise ArgumentError, 'Can only create new JWKS from Hash, Array and JWK'
+                when nil               then []
+                when JWT::JWK::Set     then jwks.keys.dup
+                when JWT::JWK::KeyBase then [jwks]
+                when Hash              then build_supported_keys(jwks.transform_keys(&:to_sym)[:keys], options)
+                when Array             then build_keys(jwks, options)
+                else raise ArgumentError, 'Can only create new JWKS from Hash, Array and JWK'
                 end
       end
 
@@ -88,6 +77,20 @@ module JWT
       alias | union
       alias + union
       alias << add
+
+      private
+
+      def build_keys(keys, options)
+        [*keys].map { |key| JWT::JWK.new(key, nil, options) }
+      end
+
+      def build_supported_keys(keys, options)
+        [*keys].each_with_object([]) do |key, arr|
+          arr << JWT::JWK.new(key, nil, options)
+        rescue JWT::UnsupportedKeyType
+          nil
+        end
+      end
     end
   end
 end
