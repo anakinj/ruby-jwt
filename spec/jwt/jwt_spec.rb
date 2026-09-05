@@ -12,7 +12,6 @@ RSpec.describe JWT do
       :secret => 'My$ecretK3y',
       :rsa_private => test_pkey('rsa-2048-private.pem'),
       :rsa_public => test_pkey('rsa-2048-public.pem'),
-      :wrong_rsa_private => test_pkey('rsa-2048-wrong-public.pem'),
       :wrong_rsa_public => test_pkey('rsa-2048-wrong-public.pem'),
       'ES256_private' => test_pkey('ec256-private.pem'),
       'ES256_public' => test_pkey('ec256-public.pem'),
@@ -160,10 +159,6 @@ RSpec.describe JWT do
   end
 
   %w[ES256 ES384 ES512 ES256K].each do |alg|
-    before do
-      skip 'OpenSSL gem missing RSA-PSS support' unless OpenSSL::PKey::RSA.method_defined?(:sign_pss)
-    end
-
     context "alg: #{alg}" do
       before(:each) do
         data[alg] = JWT.encode(payload, data["#{alg}_private"], alg)
@@ -172,10 +167,11 @@ RSpec.describe JWT do
       let(:wrong_key) { OpenSSL::PKey::EC.generate(data["#{alg}_private"].group.curve_name) }
 
       it 'should generate a valid token' do
-        jwt_payload, header = JWT.decode data[alg], data["#{alg}_public"], true, algorithm: alg
+        header, body, signature = data[alg].split('.')
 
-        expect(header['alg']).to eq alg
-        expect(jwt_payload).to eq payload
+        expect(header).to eql(Base64.urlsafe_encode64({ alg: alg }.to_json, padding: false))
+        expect(body).to eql(Base64.urlsafe_encode64(payload.to_json, padding: false))
+        expect(signature).not_to be_empty
       end
 
       it 'should decode a valid token' do
@@ -202,6 +198,8 @@ RSpec.describe JWT do
   %w[PS256 PS384 PS512].each do |alg|
     context "alg: #{alg}" do
       before(:each) do
+        skip 'OpenSSL gem missing RSA-PSS support' unless OpenSSL::PKey::RSA.method_defined?(:sign_pss)
+
         data[alg] = JWT.encode payload, data[:rsa_private], alg
       end
 
@@ -212,8 +210,8 @@ RSpec.describe JWT do
 
         header, body, signature = token.split('.')
 
-        expect(header).to eql(Base64.strict_encode64({ alg: alg }.to_json))
-        expect(body).to   eql(Base64.strict_encode64(payload.to_json))
+        expect(header).to eql(Base64.urlsafe_encode64({ alg: alg }.to_json, padding: false))
+        expect(body).to   eql(Base64.urlsafe_encode64(payload.to_json, padding: false))
 
         # Validate signature is made of up header and body of JWT
         translated_alg  = alg.gsub('PS', 'sha')
