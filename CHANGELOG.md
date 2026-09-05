@@ -12,6 +12,7 @@
 
 **Fixes and enhancements:**
 
+- Refactor `JWT::JWK::Set#initialize` so each construction path is a named method [#758](https://github.com/jwt/ruby-jwt/pull/758) ([@anakinj](https://github.com/anakinj))
 - Fix rejection of unknown algorithms from JWKs for RFC compliance and pquip [#728](https://github.com/jwt/ruby-jwt/pull/728)
 - Fix the `Style/DirectiveScope` RuboCop offense failing the build [#752](https://github.com/jwt/ruby-jwt/pull/752)
 - Fix `JWT::JWK::Set` sharing its key collection with the set it was copied from [#751](https://github.com/jwt/ruby-jwt/pull/751)
