@@ -1,3 +1,33 @@
+# Upgrading ruby-jwt to >= 3.3.0
+
+## Error hierarchy revamp
+
+The [error classes were reorganised](https://github.com/jwt/ruby-jwt/pull/722) under a new `JWT::Error` base class, so failures can be rescued by category instead of one class at a time:
+
+- `JWT::Error` is the base class for everything the gem raises.
+- `JWT::TokenError` covers every failure in processing a token, and splits into `JWT::MalformedTokenError` (the token is structurally invalid), `JWT::SignatureError` (signature and algorithm problems) and `JWT::ClaimValidationError` (a claim did not verify).
+- `JWT::VerificationKeyError`, a subclass of `JWT::VerificationError`, says the key or algorithm given for verification cannot be used, as opposed to a signature that does not match.
+
+### Decoding is unaffected
+
+`JWT::DecodeError` is deprecated in favour of the classes above, but it keeps its meaning: every error class except `JWT::EncodeError` still inherits from it. A `rescue JWT::DecodeError` around `JWT.decode` catches everything it caught before, and the specific classes it has always raised, such as `JWT::ExpiredSignature`, are unchanged. There is nothing to do on the decoding side.
+
+Verification also became more predictable: `RS*` and `PS*` now reject a key of the wrong type with a `JWT::VerificationKeyError` instead of letting a `NoMethodError` escape.
+
+### Signing failures now raise `JWT::EncodeError`
+
+This is the part that can break. Signing failures used to surface as decode errors, and are now consistently `JWT::EncodeError`, which is deliberately not a `JWT::DecodeError`:
+
+| Signing with | Used to raise | Now raises |
+| --- | --- | --- |
+| a `nil`, empty or too short HMAC key | `JWT::DecodeError` | `JWT::EncodeError` |
+| an ECDSA key whose curve does not match the algorithm | `JWT::IncorrectAlgorithm` | `JWT::EncodeError` |
+| an ECDSA key on an unsupported curve | `JWT::UnsupportedEcdsaCurve` | `JWT::EncodeError` |
+| a JWK whose `alg` does not match the algorithm | `JWT::DecodeError` | `JWT::EncodeError` |
+| an `RS*` or `PS*` public key | `ArgumentError` | `JWT::EncodeError` |
+
+If you wrap `JWT.encode` in `rescue JWT::DecodeError`, `rescue JWT::IncorrectAlgorithm` or `rescue JWT::UnsupportedEcdsaCurve`, rescue `JWT::EncodeError` or `JWT::Error` instead.
+
 # Upgrading ruby-jwt to >= 3.0.0
 
 ## Removal of the indirect [RbNaCl](https://github.com/RubyCrypto/rbnacl) dependency
